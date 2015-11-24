@@ -1,5 +1,9 @@
 package com.poison.zmeika.engine;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.StringBuilder;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,9 +17,17 @@ public class GameObject {
         child = new LinkedList<GameObject>();
     }
 
-    public void draw(float delta){
+    public void construct(){
+
+    }
+
+    public void destruct(){
+
+    }
+
+    public void draw(float delta, SpriteBatch spriteBatch){
         for(int i = 0; i < child.size(); i++){
-            child.get(i).draw(delta);
+            child.get(i).draw(delta, spriteBatch);
         }
     }
 
@@ -23,6 +35,18 @@ public class GameObject {
         for(int i = 0; i < child.size(); i++){
             child.get(i).update(delta);
         }
+    }
+
+    protected void log(Object... args){
+        StringBuffer sb = new StringBuffer();
+        for(Object o : args){
+            sb.append(o.toString());
+        }
+        Gdx.app.log(this.getClass().getCanonicalName(), sb.toString());
+    }
+
+    public void addChild(GameObject gameObject){
+        getChild().add(gameObject);
     }
 
     public List<GameObject> getChild() {

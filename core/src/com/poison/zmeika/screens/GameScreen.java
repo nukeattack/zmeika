@@ -1,32 +1,25 @@
 package com.poison.zmeika.screens;
 
-import aurelienribon.tweenengine.Tween;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
-import com.poison.zmeika.game.GameLevel;
+import com.poison.zmeika.engine.TweenController;
+import com.poison.zmeika.game.GameRoot;
 
 
 public class GameScreen implements Screen {
     GameObject rootObject;
     OrthographicCamera camera;
-    Sprite sprite;
-    Texture image;
     SpriteBatch mainBatch;
 
     public GameScreen(){
-        rootObject = new GameLevel();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
-        image = new Texture(Gdx.files.internal("badlogic.jpg"));
-        sprite = new Sprite(image);
         mainBatch = new SpriteBatch();
+        rootObject = new GameRoot();
     }
 
     @Override
@@ -39,12 +32,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
+        mainBatch.setProjectionMatrix(camera.projection);
         mainBatch.begin();
-        sprite.draw(mainBatch);
-        sprite.setPosition(400, 300);
+        rootObject.draw(delta, mainBatch);
         mainBatch.end();
-        rootObject.draw(delta);
         rootObject.update(delta);
+        TweenController.instance().getManager().update(delta);
     }
 
     @Override
