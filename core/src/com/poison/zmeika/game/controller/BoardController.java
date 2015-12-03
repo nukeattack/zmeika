@@ -10,7 +10,7 @@ public class BoardController extends GameObject {
     private int width = 20;
     private int height = 20;
     private float timePassed = 0.0f;
-    private float stepPeriod = 0.4f;
+    private float stepPeriod = 0.1f;
     private int maxX = width - 1;
     private int maxY = height - 1;
 
@@ -40,9 +40,9 @@ public class BoardController extends GameObject {
                 neighborsCount[i][j] = 0;
             }
         }
-        for(int i = 0; i < 30; i++){
-            createCell((int)(Math.random()*width), (int)(Math.random()*height));
-        }
+//        for(int i = 0; i < 30; i++){
+//            createCell((int)(Math.random()*width), (int)(Math.random()*height));
+//        }
         createCell(10, 5);
         createCell(10, 6);
         createCell(10, 7);
@@ -115,10 +115,10 @@ public class BoardController extends GameObject {
 
     private int getRealY(int y) {
         if(y < 0){
-            return width + y;
+            return height + y;
         }
-        if(y > maxX){
-            return y - width;
+        if(y > maxY){
+            return y - height;
         }
         return y;
     }
@@ -144,7 +144,6 @@ public class BoardController extends GameObject {
 
     public CellModel createCell(int x, int y) {
         if (boardModel.getCell(x, y) == null) {
-            rootObject.log("Add cell ", x, " ", y);
             x = getRealX(x);
             y = getRealY(y);
             CellModel cellModel = new CellModel(x, y);
@@ -156,7 +155,6 @@ public class BoardController extends GameObject {
     }
 
     public void removeCell(int x, int y) {
-        rootObject.log("Remove cell");
         boardModel.removeCell(x, y);
         updateNeighbors(x, y, false);
     }

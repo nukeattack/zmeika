@@ -42,7 +42,7 @@ public class GameObject {
         for(Object o : args){
             sb.append(o.toString());
         }
-        Gdx.app.log(this.getClass().getCanonicalName(), sb.toString());
+        Gdx.app.log(this.getClass().getSimpleName(), sb.toString());
     }
 
     public void addChild(GameObject gameObject){

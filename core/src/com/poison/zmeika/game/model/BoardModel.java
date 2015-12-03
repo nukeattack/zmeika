@@ -1,7 +1,5 @@
 package com.poison.zmeika.game.model;
 
-import javafx.scene.control.Cell;
-
 import java.util.LinkedList;
 import java.util.List;
 
