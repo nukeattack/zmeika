@@ -4,8 +4,8 @@ package com.poison.zmeika.engine.geometry;
  * Created by Stas on 12/3/2015.
  */
 public class Vec2i {
-    private int y = 0;
-    private int x = 0;
+    public int y = 0;
+    public int x = 0;
 
     public int getY() {
         return y;

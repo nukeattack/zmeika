@@ -2,15 +2,15 @@ package com.poison.zmeika.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.poison.zmeika.engine.GameObject;
-import com.poison.zmeika.engine.Input;
+import com.poison.zmeika.engine.InputHelper;
 import com.poison.zmeika.game.model.BoardModel;
 import com.poison.zmeika.game.model.CellModel;
 
 public class BoardController extends GameObject {
     private BoardModel boardModel;
     private GameObject rootObject;
-    private int width = 40;
-    private int height = 40;
+    private int width = 30;
+    private int height = 30;
     private float timePassed = 0.0f;
     private float stepPeriod = 0.1f;
     private int maxX = width - 1;
@@ -55,7 +55,7 @@ public class BoardController extends GameObject {
 
     public void update(float dt) {
         if(Gdx.input.isTouched()){
-            createCell((int)(Input.mousePos.x / 16.0f), (int)(Input.mousePos.y / 16.0f));
+            createCell((int)(InputHelper.mousePos.x / 16.0f), (int)(InputHelper.mousePos.y / 16.0f));
         }
         timePassed += dt;
         if (timePassed > stepPeriod) {

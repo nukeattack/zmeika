@@ -6,8 +6,8 @@ import aurelienribon.tweenengine.TweenAccessor;
  * Created by Stas on 11/22/2015.
  */
 public class Vec2f {
-    private float y;
-    private float x;
+    public float y;
+    public float x;
 
     public float getY() {
         return y;

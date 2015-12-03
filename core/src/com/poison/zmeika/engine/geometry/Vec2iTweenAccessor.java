@@ -21,8 +21,8 @@ public class Vec2iTweenAccessor implements TweenAccessor<Vec2i> {
             case POSITION_X: returnValues[0] = target.getX(); return 1;
             case POSITION_Y: returnValues[0] = target.getY(); return 1;
             case POSITION_XY:
-                returnValues[0] = target.getX();
-                returnValues[1] = target.getY();
+                returnValues[0] = target.x;
+                returnValues[1] = target.y;
                 return 2;
             default: assert false; return -1;
         }
@@ -31,11 +31,11 @@ public class Vec2iTweenAccessor implements TweenAccessor<Vec2i> {
     @Override
     public void setValues(Vec2i target, int tweenType, float[] newValues) {
         switch (tweenType) {
-            case POSITION_X: target.setX((int)newValues[0]); break;
-            case POSITION_Y: target.setY((int)newValues[0]); break;
+            case POSITION_X: target.x = ((int)newValues[0]); break;
+            case POSITION_Y: target.y = ((int)newValues[0]); break;
             case POSITION_XY:
-                target.setX((int)newValues[0]);
-                target.setY((int)newValues[1]);
+                target.x = ((int)newValues[0]);
+                target.y = ((int)newValues[1]);
                 break;
             default: assert false; break;
         }
