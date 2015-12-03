@@ -1,5 +1,7 @@
 package com.poison.zmeika.game.model;
 
+import javafx.scene.control.Cell;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,35 +9,21 @@ import java.util.List;
  * Created by Stas on 12/3/2015.
  */
 public class BoardModel {
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
     private int width;
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     private int height;
     private CellModel[] [] board;
+    private List<CellModel> cells;
 
     public BoardModel(int width, int height){
         board = new CellModel[width][height];
+        cells = new LinkedList<CellModel>();
         this.width = width;
         this.height = height;
     }
 
     public void addCell(CellModel cell){
         board[cell.getPos().getX()][cell.getPos().getY()] = cell;
+        cells.add(cell);
     }
 
     public CellModel getCell(int x, int y){
@@ -43,6 +31,9 @@ public class BoardModel {
     }
 
     public void removeCell(int x, int y){
+        if(board[x][y] != null){
+            cells.remove(board[x][y]);
+        }
         board[x][y] = null;
     }
 
@@ -62,5 +53,26 @@ public class BoardModel {
             }
         }
         return result;
+    }
+
+    public List<CellModel> getCells() {
+        return cells;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

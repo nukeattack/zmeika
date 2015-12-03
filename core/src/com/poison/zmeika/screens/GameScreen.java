@@ -18,6 +18,7 @@ public class GameScreen implements Screen {
     public GameScreen(){
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
+        camera.translate(-100, -100);
         mainBatch = new SpriteBatch();
         rootObject = new GameRoot();
     }
