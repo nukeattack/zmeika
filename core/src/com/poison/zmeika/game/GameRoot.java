@@ -7,11 +7,9 @@ import com.poison.zmeika.engine.GameObject;
  * Created by Stas on 11/22/2015.
  */
 public class GameRoot extends GameObject {
-    private GameMap level;
     private Cell cell;
 
     public GameRoot(){
-        addChild(level = new GameMap());
         addChild(cell = new Cell());
         cell.setLevel(level);
     }

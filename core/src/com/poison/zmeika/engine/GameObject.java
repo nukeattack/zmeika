@@ -49,6 +49,10 @@ public class GameObject {
         getChild().add(gameObject);
     }
 
+    public void removeChild(GameObject gameObject){
+        getChild().remove(gameObject);
+    }
+
     public List<GameObject> getChild() {
         return child;
     }
