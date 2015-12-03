@@ -37,7 +37,7 @@ public class GameObject {
         }
     }
 
-    protected void log(Object... args){
+    public void log(Object... args){
         StringBuffer sb = new StringBuffer();
         for(Object o : args){
             sb.append(o.toString());

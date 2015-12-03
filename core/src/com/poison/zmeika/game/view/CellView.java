@@ -4,18 +4,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.TextureManager;
-import com.poison.zmeika.game.model.LiveCell;
+import com.poison.zmeika.game.model.CellModel;
 
 /**
  * Created by Stas on 12/3/2015.
  */
 public class CellView extends GameObject{
-    private LiveCell cell;
+    private CellModel model;
     private Sprite sprite;
 
-    public CellView(LiveCell cell){
-        this.cell = cell;
+    public CellView(CellModel cell){
+        this.model = cell;
         sprite = new Sprite(TextureManager.instance().loadTexture("cell2.png"));
+    }
+
+    public CellModel getModel() {
+        return model;
     }
 
     @Override
@@ -27,6 +31,8 @@ public class CellView extends GameObject{
     @Override
     public void update(float delta) {
         super.update(delta);
-        sprite.setPosition(cell.getPos().getX() * sprite.getWidth(), cell.getPos().getY() * sprite.getHeight());
+        float x = model.getPos().getX() * sprite.getWidth();
+        float y = model.getPos().getY() * sprite.getHeight();
+        sprite.setPosition(x, y);
     }
 }

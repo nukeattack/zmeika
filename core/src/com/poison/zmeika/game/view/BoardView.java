@@ -15,6 +15,10 @@ public class BoardView extends GameObject {
 
     }
 
+    public List<CellView> getCells() {
+        return cells;
+    }
+
     @Override
     public void addChild(GameObject gameObject) {
         super.addChild(gameObject);
