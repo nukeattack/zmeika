@@ -3,14 +3,17 @@ package com.poison.zmeika.game.controller;
 import com.badlogic.gdx.Gdx;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.InputHelper;
+import com.poison.zmeika.engine.messaging.GameEvent;
+import com.poison.zmeika.engine.messaging.GameEventType;
+import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.game.model.BoardModel;
 import com.poison.zmeika.game.model.CellModel;
 
 public class BoardController extends GameObject {
     private BoardModel boardModel;
     private GameObject rootObject;
-    private int width = 30;
-    private int height = 30;
+    private int width = 50;
+    private int height = 38;
     private float timePassed = 0.0f;
     private float stepPeriod = 0.1f;
     private int maxX = width - 1;
@@ -147,6 +150,10 @@ public class BoardController extends GameObject {
         }
     }
 
+    private void publishPost(GameEvent event){
+        MessagingManager.instance().bus().post(event).now();
+    }
+
     public CellModel createCell(int x, int y) {
         x = x > maxX ? maxX : x;
         y = y > maxY ? maxY : y;
@@ -157,13 +164,16 @@ public class BoardController extends GameObject {
             y = getRealY(y);
             CellModel cellModel = new CellModel(x, y);
             boardModel.addCell(cellModel);
+            publishPost(new GameEvent(cellModel).forThe(GameEventType.OBJECT_CREATED));
             updateNeighbors(x, y, true);
             return cellModel;
         }
+
         return boardModel.getCell(x, y);
     }
 
     public void removeCell(int x, int y) {
+        publishPost(new GameEvent(x,y).forThe(GameEventType.OBJECT_CREATED));
         boardModel.removeCell(x, y);
         updateNeighbors(x, y, false);
     }
