@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.TextureManager;
-import com.poison.zmeika.game.LevelRoot;
 import com.poison.zmeika.game.controller.logic.BoardController;
 import com.poison.zmeika.game.model.CellModel;
 
@@ -24,7 +23,8 @@ public class CellRenderer extends GameObject {
     public boolean draw(float delta, SpriteBatch spriteBatch) {
         if(super.draw(delta, spriteBatch)){
             for(CellModel cell : controller.getBoardModel().getCells()){
-                cellSprite.setPosition(cell.getPos().getX() * cellSprite.getWidth(), cell.getPos().getY() * cellSprite.getHeight());
+                cell.screenPosition.set(cell.position.x * cellSprite.getWidth(), cell.position.y * cellSprite.getHeight());
+                cellSprite.setPosition(cell.screenPosition.x, cell.screenPosition.y);
                 cellSprite.draw(spriteBatch);
             }
             return true;

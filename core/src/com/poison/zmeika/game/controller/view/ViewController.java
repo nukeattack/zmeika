@@ -8,6 +8,8 @@ import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.engine.view.LayerManager;
 import com.poison.zmeika.game.controller.logic.BoardController;
 import com.poison.zmeika.game.controller.view.renderers.CellRenderer;
+import com.poison.zmeika.game.controller.view.renderers.ExplosiveRenderer;
+import com.poison.zmeika.game.model.Explosive;
 import net.engio.mbassy.listener.Handler;
 
 /**
@@ -17,7 +19,6 @@ public class ViewController extends GameObject {
     private BoardController boardController;
     private Sprite cellSprite;
     private GameEventListener eventListener;
-    private CellRenderer cellRenderer;
 
     private LayerManager layerManager = new LayerManager();
 
@@ -38,13 +39,14 @@ public class ViewController extends GameObject {
     }
 
     private void fillLayers(){
-        layerManager.getLayer("squares").addChild(cellRenderer = new CellRenderer(boardController));
+        layerManager.getLayer("squares").addChild(new CellRenderer(boardController));
+        layerManager.getLayer("effects").addChild(new ExplosiveRenderer(boardController));
     }
 
     @Override
     public void destruct() {
-        super.destruct();
         MessagingManager.instance().unregisterListener(this);
+        super.destruct();
     }
 
     @Override
@@ -54,9 +56,7 @@ public class ViewController extends GameObject {
 
     @Handler
     public void handle(GameEvent event){
-        System.out.println("******************* EVENT");
-        System.out.println(event.toString());
-        System.out.println("******************* END EVENT");
+
     }
 
     public void setBoardController(BoardController boardController) {

@@ -3,17 +3,28 @@ package com.poison.zmeika.game.model;
 import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.geometry.Vec2i;
 
-/**
- * Created by Stas on 12/3/2015.
- */
-public class CellModel {
-    private Vec2i pos;
+public class CellModel implements ICleanable {
+    public Vec2i position;
+    public Vec2i size;
+    public Vec2f screenPosition;
 
-    public CellModel(int x, int y){
-        pos = new Vec2i(x,y);
+    public CellModel(){
+        position = new Vec2i();
+        size = new Vec2i();
+        screenPosition = new Vec2f();
     }
 
-    public Vec2i getPos() {
-        return pos;
+    public CellModel position(int x, int y){
+        position.set(x, y);
+        return this;
+    }
+
+    public CellModel size(int x, int y){
+        size.set(x,y);
+        return this;
+    }
+
+    @Override
+    public void clean() {
     }
 }

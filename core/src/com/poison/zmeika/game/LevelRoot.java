@@ -16,7 +16,7 @@ import java.util.List;
 public class LevelRoot extends GameObject implements IAsyncLoaded{
     private BoardController boardController;
     private ViewController viewController;
-    private static List<String> TEXTURES = Arrays.asList(new String [] {"cell2.png"});
+    private static List<String> TEXTURES = Arrays.asList(new String [] {"cell2.png", "cell.png"});
     public static String CONTEXT_NAME = "level_context";
 
     public LevelRoot(){

@@ -1,5 +1,7 @@
 package com.poison.zmeika.game.model;
 
+import com.poison.zmeika.game.model.pools.PoolsContainer;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class BoardModel {
     }
 
     public void addCell(CellModel cell){
-        board[cell.getPos().getX()][cell.getPos().getY()] = cell;
+        board[cell.position.x][cell.position.y] = cell;
         cells.add(cell);
     }
 
@@ -29,9 +31,12 @@ public class BoardModel {
     }
 
     public void removeCell(int x, int y){
-        if(board[x][y] != null){
+        CellModel model = board[x][y];
+        if(model != null){
             cells.remove(board[x][y]);
+            model.clean();
         }
+        PoolsContainer.cellModels.release(model);
         board[x][y] = null;
     }
 

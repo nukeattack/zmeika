@@ -22,6 +22,17 @@ public class Vec2f {
         setY(y);
     }
 
+    public Vec2f(){
+        x = 0.0f;
+        y = 0.0f;
+    }
+
+    public Vec2f set(float x, float y){
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
     public float getX() {
         return x;
     }
@@ -38,5 +49,10 @@ public class Vec2f {
     public void add(Vec2f vec){
         x += vec.x;
         y += vec.y;
+    }
+
+    public void add(float x, float y){
+        this.x += x;
+        this.y += y;
     }
 }

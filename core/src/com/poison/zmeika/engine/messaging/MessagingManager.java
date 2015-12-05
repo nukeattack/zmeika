@@ -31,12 +31,14 @@ public class MessagingManager {
         for(SyncAsyncPostCommand command : commands){
             command.now();
         }
+        cleanupEvents();
     }
 
     public void cleanupEvents(){
         for(GameEvent event : events){
             EventPool.instance().releaseEvent(event);
         }
+        commands.clear();
         events.clear();
     }
 

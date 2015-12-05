@@ -7,7 +7,7 @@ import java.util.Objects;
  * Created by Stas on 12/4/2015.
  */
 public class GameEvent {
-    protected Object [] data;
+    public Object [] data;
     public GameEventType type;
     public boolean processed = false;
 
@@ -44,7 +44,11 @@ public class GameEvent {
     @Override
     public String toString() {
         StringBuffer result = new StringBuffer();
-        result.append("[");
+        result.append("{name=");
+        result.append(type != null ? type.toString() : "");
+        result.append(",processed=");
+        result.append(processed);
+        result.append(",data=[");
         for(int i = 0; i < data.length; i++){
             if(i != 0){
                 result.append(",");

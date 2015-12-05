@@ -9,6 +9,7 @@ import com.poison.zmeika.engine.messaging.GameEventType;
 import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.game.model.BoardModel;
 import com.poison.zmeika.game.model.CellModel;
+import com.poison.zmeika.game.model.pools.PoolsContainer;
 
 public class BoardController extends GameObject {
     private BoardModel boardModel;
@@ -19,6 +20,7 @@ public class BoardController extends GameObject {
     private float stepPeriod = 0.1f;
     private int maxX = width - 1;
     private int maxY = height - 1;
+    private int minCells = 60;
 
     private boolean[][] removeBoard;
     private boolean[][] createBoard;
@@ -105,6 +107,18 @@ public class BoardController extends GameObject {
                 }
             }
         }
+        if(boardModel.getCells().size() < minCells){
+            int size = minCells - boardModel.getCells().size();
+            for(int i = 0; i < size; i++){
+                createRandomCell();
+            }
+        }
+    }
+
+    private void createRandomCell(){
+        int i = (int)(Math.random() * width);
+        int j = (int)(Math.random() * height);
+        createCell(i, j);
     }
 
     private void clearBoards() {
@@ -167,7 +181,7 @@ public class BoardController extends GameObject {
         if (boardModel.getCell(x, y) == null) {
             x = getRealX(x);
             y = getRealY(y);
-            CellModel cellModel = new CellModel(x, y);
+            CellModel cellModel = PoolsContainer.cellModels.get().position(x, y);
             boardModel.addCell(cellModel);
             publishPost(EventPool.instance().getEvent().withData(cellModel).withType(GameEventType.OBJECT_CREATED));
             updateNeighbors(x, y, true);
@@ -178,7 +192,9 @@ public class BoardController extends GameObject {
     }
 
     public void removeCell(int x, int y) {
-        publishPost(EventPool.instance().getEvent().withData(x,y).withType(GameEventType.OBJECT_DELETED));
+        CellModel model = boardModel.getCell(x, y);
+        publishPost(EventPool.instance().getEvent().withData(model.position.x,model.position.y,
+                model.screenPosition.x, model.screenPosition.y).withType(GameEventType.OBJECT_DELETED));
         boardModel.removeCell(x, y);
         updateNeighbors(x, y, false);
     }

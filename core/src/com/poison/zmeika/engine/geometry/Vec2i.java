@@ -15,9 +15,15 @@ public class Vec2i {
         this.y = y;
     }
 
-    public Vec2i(int x, int y) {
-        setX(x);
-        setY(y);
+    public Vec2i(){
+        this.x = (0);
+        this.y = (0);
+    }
+
+    public Vec2i set(int x, int y){
+        this.x = x;
+        this.y = y;
+        return this;
     }
 
     public int getX() {

@@ -32,7 +32,9 @@ public class GameScreen implements Screen {
         camera.position.y = Gdx.graphics.getHeight()/2;
         mainBatch = new SpriteBatch();
         levelRoot = getLevelRoot(1);
+
         cursor = new Sprite(new Texture(Gdx.files.local("cell2.png")));
+
 
         TextureManager.instance().preloadTextures(levelRoot.getContextName(), levelRoot.getTextures());
     }
@@ -44,8 +46,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        MessagingManager.instance().cleanupEvents();
+        MessagingManager.instance().executeEvents();
         TextureManager.instance().update(delta);
+        TweenController.instance().getManager().update(delta);
         if(levelCreated){
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -60,17 +63,15 @@ public class GameScreen implements Screen {
             cursor.draw(mainBatch);
             mainBatch.end();
             levelRoot.update(delta);
-            TweenController.instance().getManager().update(delta);
         }else{
             if(levelRoot.getProgress() == 1.0){
                 levelRoot.construct();
                 levelCreated = true;
-                Gdx.app.log("Loaded " + levelRoot.getContextName(), "Progress : " + levelRoot.getProgress());
+                Gdx.app.log("Loaded " + levelRoot.getContextName(), "Progress : 100%");
             }else{
-                Gdx.app.log("Loading " + levelRoot.getContextName(), "Progress : " + levelRoot.getProgress());
+                Gdx.app.log("Loading " + levelRoot.getContextName(), "Progress : " + levelRoot.getProgress()*100);
             }
         }
-        MessagingManager.instance().executeEvents();
     }
 
     private LevelRoot getLevelRoot(int id){
