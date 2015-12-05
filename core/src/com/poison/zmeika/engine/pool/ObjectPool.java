@@ -4,8 +4,6 @@ import com.poison.zmeika.game.model.ICleanable;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public final class ObjectPool< T >
         extends AbstractPool < T >
@@ -14,9 +12,6 @@ public final class ObjectPool< T >
     private Queue< T > objects;
 
     private ObjectFactory < T > objectFactory;
-
-    private ExecutorService executor =
-            Executors.newCachedThreadPool();
 
     private volatile boolean shutdownCalled;
 
@@ -59,7 +54,6 @@ public final class ObjectPool< T >
     public void shutdown()
     {
         shutdownCalled = true;
-        executor.shutdownNow();
         clearResources();
     }
 

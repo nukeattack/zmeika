@@ -17,7 +17,7 @@ import com.poison.zmeika.game.model.life.CellModel;
 public class BoardController extends GameObject {
     private static final int WIDTH = 50;
     private static final int HEIGHT = 38;
-    private static final float STEP_PERIOD = 0.1f;
+    private static final float STEP_PERIOD = 0.3f;
     private static final int MIN_CELLS = 150;
 
     private BoardModel board;
@@ -52,9 +52,7 @@ public class BoardController extends GameObject {
                 neighborsCount[i][j] = 0;
             }
         }
-//        for(int i = 0; i < 30; i++){
-//            createCell((int)(Math.random()*width), (int)(Math.random()*height));
-//        }
+
         createCell(10, 5);
         createCell(10, 6);
         createCell(10, 7);

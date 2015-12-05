@@ -9,7 +9,7 @@ import com.poison.zmeika.game.model.ICleanable;
 public class Explosive implements ICleanable{
     public Vec2f position = new Vec2f(1.0f, 1.0f);
     public Vec2f size = new Vec2f(1.0f, 1.0f);
-    public float opacity = 1.0f;
+    public Vec2f opacity = new Vec2f(1.0f, 1.0f);
 
     public Explosive(){
         clean();
@@ -26,7 +26,8 @@ public class Explosive implements ICleanable{
     }
 
     public Explosive setOpacity(float opacity){
-        this.opacity = opacity;
+        opacity = opacity < 0.0 ? 0.0f : opacity;
+        this.opacity.x = opacity;
         return this;
     }
 
@@ -35,13 +36,13 @@ public class Explosive implements ICleanable{
     }
 
     public boolean isFinished() {
-        return opacity <= 0.0f;
+        return opacity.x <= 0.0f;
     }
 
     @Override
     public void clean() {
         position.set(0.0f, 0.0f);
         size.set(1.0f, 1.0f);
-        opacity = 1.0f;
+        opacity.x = 1.0f;
     }
 }
