@@ -16,7 +16,7 @@ public class GameObject {
     protected boolean isConstructed = false;
 
     public GameObject(){
-        children = new LinkedList<>();
+        children = new LinkedList<GameObject>();
     }
 
     public void construct(){

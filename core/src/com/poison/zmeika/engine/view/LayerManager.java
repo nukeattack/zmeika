@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by Stas on 12/5/2015.
  */
 public class LayerManager extends GameObject{
-    private Map<String, GameObject> layers = new LinkedHashMap<>();
+    private Map<String, GameObject> layers = new LinkedHashMap<String, GameObject>();
 
     public void addLayer(String name){
         GameObject gameObject = new GameObject();

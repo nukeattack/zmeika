@@ -1,5 +1,6 @@
 package com.poison.zmeika.engine.messaging;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -28,9 +29,11 @@ public class GameEvent {
     public String toString() {
         StringBuffer result = new StringBuffer();
         result.append("[");
-        for(Object object : data){
-            result.append(object.toString());
-            result.append(",");
+        for(int i = 0; i < data.length; i++){
+            if(i != 0){
+                result.append(",");
+            }
+            result.append(data[i].toString());
         }
         result.append("]");
         return result.toString();

@@ -20,7 +20,7 @@ public class TextureManager {
             this.usageCount = 1;
         }
     }
-    private Map<String, TextureItem> textureCache = new HashMap<>();
+    private Map<String, TextureItem> textureCache = new HashMap<String, TextureItem>();
 
     public Texture loadTexture(String texture) {
         if (textureCache.containsKey(texture)) {
