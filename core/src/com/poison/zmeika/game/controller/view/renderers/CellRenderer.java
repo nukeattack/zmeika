@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.TextureManager;
+import com.poison.zmeika.game.LevelRoot;
 import com.poison.zmeika.game.controller.logic.BoardController;
 import com.poison.zmeika.game.model.CellModel;
 
@@ -34,7 +35,7 @@ public class CellRenderer extends GameObject {
 
     @Override
     public void construct() {
-        cellSprite = TextureManager.instance().simpleSprite(IMAGE_NAME);
+        cellSprite = new Sprite(TextureManager.instance().getTexture(getContextName(), IMAGE_NAME));
         super.construct();
     }
 

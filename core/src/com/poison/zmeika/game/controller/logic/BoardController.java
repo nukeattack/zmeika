@@ -3,6 +3,7 @@ package com.poison.zmeika.game.controller.logic;
 import com.badlogic.gdx.Gdx;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.InputHelper;
+import com.poison.zmeika.engine.messaging.EventPool;
 import com.poison.zmeika.engine.messaging.GameEvent;
 import com.poison.zmeika.engine.messaging.GameEventType;
 import com.poison.zmeika.engine.messaging.MessagingManager;
@@ -155,7 +156,7 @@ public class BoardController extends GameObject {
     }
 
     private void publishPost(GameEvent event){
-        MessagingManager.instance().bus().post(event).now();
+        MessagingManager.instance().publishEvent(event);
     }
 
     public CellModel createCell(int x, int y) {
@@ -168,7 +169,7 @@ public class BoardController extends GameObject {
             y = getRealY(y);
             CellModel cellModel = new CellModel(x, y);
             boardModel.addCell(cellModel);
-            publishPost(new GameEvent(cellModel).forThe(GameEventType.OBJECT_CREATED));
+            publishPost(EventPool.instance().getEvent().withData(cellModel).withType(GameEventType.OBJECT_CREATED));
             updateNeighbors(x, y, true);
             return cellModel;
         }
@@ -177,7 +178,7 @@ public class BoardController extends GameObject {
     }
 
     public void removeCell(int x, int y) {
-        publishPost(new GameEvent(x,y).forThe(GameEventType.OBJECT_CREATED));
+        publishPost(EventPool.instance().getEvent().withData(x,y).withType(GameEventType.OBJECT_DELETED));
         boardModel.removeCell(x, y);
         updateNeighbors(x, y, false);
     }

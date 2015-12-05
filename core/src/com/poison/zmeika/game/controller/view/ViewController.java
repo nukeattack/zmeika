@@ -44,7 +44,7 @@ public class ViewController extends GameObject {
     @Override
     public void destruct() {
         super.destruct();
-        MessagingManager.instance().bus().unsubscribe(this);
+        MessagingManager.instance().unregisterListener(this);
     }
 
     @Override

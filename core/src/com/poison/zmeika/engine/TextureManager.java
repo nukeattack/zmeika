@@ -1,6 +1,6 @@
 package com.poison.zmeika.engine;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -11,29 +11,52 @@ import java.util.Map;
  * Created by Stas on 11/22/2015.
  */
 public class TextureManager {
-    class TextureItem{
-        public int usageCount = 1;
-        public Texture texture;
+    private Map<String, AssetManager> assetContexts = new HashMap<String, AssetManager>();
 
-        public TextureItem(Texture texture){
-            this.texture = texture;
-            this.usageCount = 1;
+    public void preloadTextures(String context, Iterable<String> names){
+        AssetManager assetContext = getAssetContext(context);
+        for(String name : names){
+            assetContext.load(name, Texture.class);
         }
     }
-    private Map<String, TextureItem> textureCache = new HashMap<String, TextureItem>();
 
-    public Texture loadTexture(String texture) {
-        if (textureCache.containsKey(texture)) {
-            textureCache.get(texture).usageCount++;
-            return textureCache.get(texture).texture;
+    public AssetManager getAssetContext(String contextName){
+        synchronized (assetContexts){
+            if(assetContexts.containsKey(contextName)){
+                return assetContexts.get(contextName);
+            }else{
+                assetContexts.put(contextName, new AssetManager());
+                return assetContexts.get(contextName);
+            }
         }
-        textureCache.put(texture, new TextureItem(new Texture(Gdx.files.internal(texture))));
-        return textureCache.get(texture).texture;
     }
 
-    public Sprite simpleSprite(String texture){
-        return new Sprite(loadTexture(texture));
+    public void preloadTexture(String context, String name){
+        AssetManager assetContext = getAssetContext(context);
+        assetContext.load(name, Texture.class);
     }
+
+    private void freeContext(String contextName){
+        if(assetContexts.containsKey(contextName)){
+            assetContexts.get(contextName).clear();
+            assetContexts.remove(contextName);
+        }
+    }
+
+    public Texture getTexture(String context, String name){
+        if(!getAssetContext(context).isLoaded(name)){
+            throw new RuntimeException("Cnt find texture on context : " + context + " name : " + name);
+        }
+        return getAssetContext(context).get(name);
+    }
+
+    public void update(float dt){
+        int time = (int)(dt*1000);
+        for(AssetManager manager : assetContexts.values()){
+            manager.update(time);
+        }
+    }
+
 
     private static TextureManager instance;
     public static TextureManager instance(){

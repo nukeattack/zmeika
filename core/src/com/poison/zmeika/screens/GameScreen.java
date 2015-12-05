@@ -4,32 +4,37 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.InputHelper;
 import com.poison.zmeika.engine.TextureManager;
 import com.poison.zmeika.engine.TweenController;
-import com.poison.zmeika.game.GameRoot;
+import com.poison.zmeika.engine.messaging.MessagingManager;
+import com.poison.zmeika.game.LevelRoot;
 
 
 public class GameScreen implements Screen {
-    GameObject rootObject;
+    public static final String CONTEXT = "gameScreenContext";
+
+    LevelRoot levelRoot;
     OrthographicCamera camera;
     SpriteBatch mainBatch;
     Sprite cursor;
     Vector3 mouse = new Vector3(0,0,0);
-    private boolean rootCreated = false;
+    private boolean levelCreated = false;
+
 
     public GameScreen(){
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.x = Gdx.graphics.getWidth()/2;
         camera.position.y = Gdx.graphics.getHeight()/2;
-//        camera.lookAt(-400, -300, 0);
         mainBatch = new SpriteBatch();
-        rootObject = new GameRoot();
-        cursor = new Sprite(TextureManager.instance().loadTexture("cell2.png"));
+        levelRoot = getLevelRoot(1);
+        cursor = new Sprite(new Texture(Gdx.files.local("cell2.png")));
+
+        TextureManager.instance().preloadTextures(levelRoot.getContextName(), levelRoot.getTextures());
     }
 
     @Override
@@ -39,7 +44,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(rootCreated){
+        MessagingManager.instance().cleanupEvents();
+        TextureManager.instance().update(delta);
+        if(levelCreated){
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             camera.update();
@@ -48,16 +55,26 @@ public class GameScreen implements Screen {
             Vector3 realPos = camera.unproject(mouse);
             InputHelper.mousePos.set(realPos.x, realPos.y, 0);
             mainBatch.begin();
-            rootObject.draw(delta, mainBatch);
+            levelRoot.draw(delta, mainBatch);
             cursor.setPosition(InputHelper.mousePos.x, InputHelper.mousePos.y);
             cursor.draw(mainBatch);
             mainBatch.end();
-            rootObject.update(delta);
+            levelRoot.update(delta);
             TweenController.instance().getManager().update(delta);
         }else{
-            rootObject.construct();
-            rootCreated = true;
+            if(levelRoot.getProgress() == 1.0){
+                levelRoot.construct();
+                levelCreated = true;
+                Gdx.app.log("Loaded " + levelRoot.getContextName(), "Progress : " + levelRoot.getProgress());
+            }else{
+                Gdx.app.log("Loading " + levelRoot.getContextName(), "Progress : " + levelRoot.getProgress());
+            }
         }
+        MessagingManager.instance().executeEvents();
+    }
+
+    private LevelRoot getLevelRoot(int id){
+        return new LevelRoot();
     }
 
     @Override

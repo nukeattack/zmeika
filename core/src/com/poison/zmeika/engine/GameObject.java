@@ -14,9 +14,34 @@ public class GameObject {
     protected List<GameObject> children;
     protected boolean isDeleted = false;
     protected boolean isConstructed = false;
+    protected boolean isLoaded = false;
+    private String contextName = null;
+    private GameObject parent;
+
+    public String getContextName() {
+        if(contextName == null){
+            contextName = parent.getContextName();
+        }
+        return contextName;
+    }
+
+    public GameObject setContextName(String contextName) {
+        this.contextName = contextName;
+        return this;
+    }
+
 
     public GameObject(){
         children = new LinkedList<GameObject>();
+    }
+
+
+    public boolean isLoaded(){
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean isLoaded){
+        this.isLoaded = true;
     }
 
     public void construct(){
@@ -74,8 +99,10 @@ public class GameObject {
         Gdx.app.log(this.getClass().getSimpleName(), sb.toString());
     }
 
-    public void addChild(GameObject gameObject){
+    public GameObject addChild(GameObject gameObject){
         getChildren().add(gameObject);
+        gameObject.setParent(this);
+        return gameObject;
     }
 
     public void removeChild(GameObject gameObject){
@@ -97,4 +124,14 @@ public class GameObject {
     public boolean isDeleted(){
         return isDeleted;
     }
+
+    public GameObject getParent() {
+        return parent;
+    }
+
+    public void setParent(GameObject parent) {
+        this.parent = parent;
+    }
+
+
 }

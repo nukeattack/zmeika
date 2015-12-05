@@ -7,22 +7,38 @@ import java.util.Objects;
  * Created by Stas on 12/4/2015.
  */
 public class GameEvent {
-    private Object [] data;
+    protected Object [] data;
     public GameEventType type;
+    public boolean processed = false;
 
-    public GameEvent(Object...data){
+    public GameEvent(){
+    }
+
+    public GameEvent clear(){
+        data = null;
+        type = null;
+        processed = false;
+        return this;
+    }
+
+    public GameEvent withData(Object...data){
         this.data = new Object[data.length];
         int i = 0;
         for(Object object : data){
             this.data[i] = object;
             i++;
         }
+        return this;
     }
 
-    public GameEvent forThe(GameEventType eventType){
-        GameEvent event = new GameEvent(data);
-        event.type = eventType;
-        return event;
+    public GameEvent isProcessed(boolean processed){
+        this.processed = processed;
+        return this;
+    }
+
+    public GameEvent withType(GameEventType eventType){
+        type = eventType;
+        return this;
     }
 
     @Override
