@@ -3,5 +3,4 @@
 <module>
 	<source path="com/poison/zmeika" />
 	<source path="aurelienribon/tweenengine" />
-	<source path="net/engio/mbassy" />
 </module>

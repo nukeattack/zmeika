@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         MessagingManager.instance().executeEvents();
         TextureManager.instance().update(delta);
-        TweenController.instance().getManager().update(delta);
+        TweenController.instance().manager.update(delta);
         if(levelCreated){
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

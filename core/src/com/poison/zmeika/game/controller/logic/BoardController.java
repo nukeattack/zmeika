@@ -1,26 +1,30 @@
 package com.poison.zmeika.game.controller.logic;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.Gdx;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.InputHelper;
+import com.poison.zmeika.engine.TweenController;
+import com.poison.zmeika.engine.geometry.Vec2fTweenAccessor;
 import com.poison.zmeika.engine.messaging.EventPool;
 import com.poison.zmeika.engine.messaging.GameEvent;
 import com.poison.zmeika.engine.messaging.GameEventType;
 import com.poison.zmeika.engine.messaging.MessagingManager;
-import com.poison.zmeika.game.model.BoardModel;
-import com.poison.zmeika.game.model.CellModel;
-import com.poison.zmeika.game.model.pools.PoolsContainer;
+import com.poison.zmeika.game.controller.utils.PoolController;
+import com.poison.zmeika.game.model.life.BoardModel;
+import com.poison.zmeika.game.model.life.CellModel;
 
 public class BoardController extends GameObject {
-    private BoardModel boardModel;
+    private static final int WIDTH = 50;
+    private static final int HEIGHT = 38;
+    private static final float STEP_PERIOD = 0.1f;
+    private static final int MIN_CELLS = 150;
+
+    private BoardModel board;
     private GameObject rootObject;
-    private int width = 50;
-    private int height = 38;
     private float timePassed = 0.0f;
-    private float stepPeriod = 0.1f;
-    private int maxX = width - 1;
-    private int maxY = height - 1;
-    private int minCells = 60;
+    private int maxX = WIDTH - 1;
+    private int maxY = HEIGHT - 1;
 
     private boolean[][] removeBoard;
     private boolean[][] createBoard;
@@ -30,8 +34,8 @@ public class BoardController extends GameObject {
 
     }
 
-    public BoardModel getBoardModel() {
-        return boardModel;
+    public BoardModel getBoard() {
+        return board;
     }
 
     public void setRootObject(GameObject rootObject) {
@@ -39,12 +43,12 @@ public class BoardController extends GameObject {
     }
 
     public void init() {
-        boardModel = new BoardModel(width, height);
-        removeBoard = new boolean[width][height];
-        createBoard = new boolean[width][height];
-        neighborsCount = new int[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        board = new BoardModel(WIDTH, HEIGHT);
+        removeBoard = new boolean[WIDTH][HEIGHT];
+        createBoard = new boolean[WIDTH][HEIGHT];
+        neighborsCount = new int[WIDTH][HEIGHT];
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
                 neighborsCount[i][j] = 0;
             }
         }
@@ -65,11 +69,11 @@ public class BoardController extends GameObject {
                 createCell((int)(InputHelper.mousePos.x / 16.0f), (int)(InputHelper.mousePos.y / 16.0f));
             }
             timePassed += dt;
-            if (timePassed > stepPeriod) {
-                while (timePassed > stepPeriod) {
+            if (timePassed > STEP_PERIOD) {
+                while (timePassed > STEP_PERIOD) {
                     rootObject.log("Step");
                     processStep();
-                    timePassed = timePassed - stepPeriod;
+                    timePassed = timePassed - STEP_PERIOD;
                 }
             }
             return true;
@@ -80,9 +84,22 @@ public class BoardController extends GameObject {
 
     private void processStep() {
         clearBoards();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (boardModel.getCell(i, j) == null) {
+        lifeIteration();
+        markLifeToLiveDeadToDeath();
+
+
+        if(board.getCells().size() < MIN_CELLS){
+            int size = MIN_CELLS - board.getCells().size();
+            for(int i = 0; i < size; i++){
+                createRandomCell();
+            }
+        }
+    }
+
+    private void lifeIteration(){
+        for (int i = 0; i < board.width; i++) {
+            for (int j = 0; j < board.height; j++) {
+                if (board.getCell(i, j) == null) {
                     if (neighborsCount[i][j] == 3) {
                         createBoard[i][j] = true;
                     }
@@ -93,37 +110,34 @@ public class BoardController extends GameObject {
                 }
             }
         }
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+    }
+
+    private void markLifeToLiveDeadToDeath(){
+        for (int i = 0; i < board.width; i++) {
+            for (int j = 0; j < board.height; j++) {
                 if (removeBoard[i][j]) {
                     removeCell(i, j);
                 }
             }
         }
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < board.width; i++) {
+            for (int j = 0; j < board.height; j++) {
                 if (createBoard[i][j]) {
                     createCell(i, j);
                 }
             }
         }
-        if(boardModel.getCells().size() < minCells){
-            int size = minCells - boardModel.getCells().size();
-            for(int i = 0; i < size; i++){
-                createRandomCell();
-            }
-        }
     }
 
     private void createRandomCell(){
-        int i = (int)(Math.random() * width);
-        int j = (int)(Math.random() * height);
+        int i = (int)(Math.random() * board.width);
+        int j = (int)(Math.random() * board.height);
         createCell(i, j);
     }
 
     private void clearBoards() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < board.width; i++) {
+            for (int j = 0; j < board.height; j++) {
                 removeBoard[i][j] = false;
                 createBoard[i][j] = false;
             }
@@ -132,20 +146,20 @@ public class BoardController extends GameObject {
 
     private int getRealX(int x) {
         if(x < 0){
-            return width + x;
+            return board.width + x;
         }
         if(x > maxX){
-            return x - width;
+            return x - board.width;
         }
         return x;
     }
 
     private int getRealY(int y) {
         if(y < 0){
-            return height + y;
+            return board.height + y;
         }
         if(y > maxY){
-            return y - height;
+            return y - board.height;
         }
         return y;
     }
@@ -169,33 +183,33 @@ public class BoardController extends GameObject {
         }
     }
 
-    private void publishPost(GameEvent event){
+    private void publishEvent(GameEvent event){
         MessagingManager.instance().publishEvent(event);
     }
 
+
     public CellModel createCell(int x, int y) {
-        x = x > maxX ? maxX : x;
-        y = y > maxY ? maxY : y;
-        x = x < 0 ? 0 : x;
-        y = y < 0 ? 0 : y;
-        if (boardModel.getCell(x, y) == null) {
+        x = x > maxX ? maxX : x < 0 ? 0 : x;
+        y = y > maxY ? maxY : y < 0 ? 0 : y;
+
+        if (board.getCell(x, y) == null) {
             x = getRealX(x);
             y = getRealY(y);
-            CellModel cellModel = PoolsContainer.cellModels.get().position(x, y);
-            boardModel.addCell(cellModel);
-            publishPost(EventPool.instance().getEvent().withData(cellModel).withType(GameEventType.OBJECT_CREATED));
+            CellModel cell = PoolController.cellModels.get().position(x, y).opacity(0.0f, 0.0f);
+            TweenController.start(Tween.to(cell.opacity, Vec2fTweenAccessor.POSITION_XY, STEP_PERIOD).target(1.0f, 1.0f));
+            board.addCell(cell);
+            publishEvent(EventPool.instance().getEvent().withData(cell).withType(GameEventType.OBJECT_CREATED));
             updateNeighbors(x, y, true);
-            return cellModel;
+            return cell;
         }
 
-        return boardModel.getCell(x, y);
+        return board.getCell(x, y);
     }
 
     public void removeCell(int x, int y) {
-        CellModel model = boardModel.getCell(x, y);
-        publishPost(EventPool.instance().getEvent().withData(model.position.x,model.position.y,
-                model.screenPosition.x, model.screenPosition.y).withType(GameEventType.OBJECT_DELETED));
-        boardModel.removeCell(x, y);
+        CellModel model = board.getCell(x, y);
+        publishEvent(EventPool.instance().getEvent().withData(PoolController.vec2f.get().set(model.screenPosition.x, model.screenPosition.y)).withType(GameEventType.OBJECT_DELETED));
+        board.removeCell(x, y);
         updateNeighbors(x, y, false);
     }
 }

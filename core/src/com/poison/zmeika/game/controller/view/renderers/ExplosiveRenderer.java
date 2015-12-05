@@ -4,12 +4,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.TextureManager;
+import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.messaging.GameEvent;
 import com.poison.zmeika.engine.messaging.GameEventType;
 import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.game.controller.logic.BoardController;
-import com.poison.zmeika.game.model.Explosive;
-import com.poison.zmeika.game.model.pools.PoolsContainer;
+import com.poison.zmeika.game.model.life.CellModel;
+import com.poison.zmeika.game.model.fx.Explosive;
+import com.poison.zmeika.game.controller.utils.PoolController;
 import net.engio.mbassy.listener.Handler;
 
 import java.util.Iterator;
@@ -36,6 +38,7 @@ public class ExplosiveRenderer extends GameObject {
                 explosive.opacity = explosive.opacity - 0.7f * delta;
                 explosive.opacity = explosive.opacity <= 0.0f ? 0.0f : explosive.opacity;
                 explosive.size.add(1.0f*delta, 1.0f*delta);
+                cellSprite.setCenter(cellSprite.getWidth() * 0.5f, cellSprite.getHeight() * 0.5f);
                 cellSprite.setPosition(explosive.position.x, explosive.position.y);
                 cellSprite.setAlpha(explosive.opacity);
                 cellSprite.setScale(explosive.size.x, explosive.size.y);
@@ -54,18 +57,27 @@ public class ExplosiveRenderer extends GameObject {
             Explosive explosive = iterator.next();
             if(explosive.isFinished()){
                 iterator.remove();
+                removeExplosive(explosive);
             }
         }
         return super.update(delta);
     }
 
+    private void removeExplosive(Explosive e){
+        PoolController.explosives.release(e);
+    }
+
+    private void createExplosive(float x, float y){
+        System.out.println(x + " " + y);
+        explosives.add(PoolController.explosives.get().setPos(x, y));
+    }
+
     @Handler
     public void handle(GameEvent event){
         if(event.type == GameEventType.OBJECT_DELETED){
-            float rx = (Float)event.data[2];
-            float ry = (Float)event.data[3];
-
-            explosives.add(PoolsContainer.explosives.get().setPos(rx,ry));
+            Vec2f model = (Vec2f) event.data[0];
+            createExplosive(model.x, model.y);
+            PoolController.vec2f.release(model);
         }
     }
 

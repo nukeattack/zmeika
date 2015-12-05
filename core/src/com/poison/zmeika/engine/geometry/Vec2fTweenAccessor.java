@@ -31,11 +31,11 @@ public class Vec2fTweenAccessor implements TweenAccessor<Vec2f> {
     @Override
     public void setValues(Vec2f target, int tweenType, float[] newValues) {
         switch (tweenType) {
-            case POSITION_X: target.x = (newValues[0]); break;
-            case POSITION_Y: target.y = (newValues[0]); break;
+            case POSITION_X: target.x = newValues[0]; break;
+            case POSITION_Y: target.y = newValues[0]; break;
             case POSITION_XY:
-                target.x = (newValues[0]);
-                target.y = (newValues[1]);
+                target.x = newValues[0];
+                target.y = newValues[1];
                 break;
             default: assert false; break;
         }

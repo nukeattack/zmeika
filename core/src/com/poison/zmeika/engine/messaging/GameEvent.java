@@ -1,12 +1,14 @@
 package com.poison.zmeika.engine.messaging;
 
+import com.poison.zmeika.game.model.ICleanable;
+
 import java.util.Iterator;
 import java.util.Objects;
 
 /**
  * Created by Stas on 12/4/2015.
  */
-public class GameEvent {
+public class GameEvent implements ICleanable {
     public Object [] data;
     public GameEventType type;
     public boolean processed = false;
@@ -57,5 +59,11 @@ public class GameEvent {
         }
         result.append("]");
         return result.toString();
+    }
+
+    @Override
+    public void clean() {
+        data = null;
+        type = null;
     }
 }

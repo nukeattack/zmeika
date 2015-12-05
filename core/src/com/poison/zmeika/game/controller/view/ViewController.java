@@ -9,7 +9,6 @@ import com.poison.zmeika.engine.view.LayerManager;
 import com.poison.zmeika.game.controller.logic.BoardController;
 import com.poison.zmeika.game.controller.view.renderers.CellRenderer;
 import com.poison.zmeika.game.controller.view.renderers.ExplosiveRenderer;
-import com.poison.zmeika.game.model.Explosive;
 import net.engio.mbassy.listener.Handler;
 
 /**

@@ -1,8 +1,11 @@
 package com.poison.zmeika.engine.pool;
 
+import com.poison.zmeika.game.model.ICleanable;
+
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class ObjectPool< T >
         extends AbstractPool < T >
@@ -71,6 +74,9 @@ public final class ObjectPool< T >
     protected void returnToPool(T t)
     {
         synchronized (objects){
+            if(t instanceof ICleanable){
+                ((ICleanable) t).clean();
+            }
             objects.add(t);
         }
     }
