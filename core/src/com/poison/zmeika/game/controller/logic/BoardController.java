@@ -1,4 +1,4 @@
-package com.poison.zmeika.game.controller;
+package com.poison.zmeika.game.controller.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.poison.zmeika.engine.GameObject;
@@ -56,18 +56,22 @@ public class BoardController extends GameObject {
 
     }
 
-    public void update(float dt) {
-        if(Gdx.input.isTouched()){
-            createCell((int)(InputHelper.mousePos.x / 16.0f), (int)(InputHelper.mousePos.y / 16.0f));
-        }
-        timePassed += dt;
-        if (timePassed > stepPeriod) {
-            while (timePassed > stepPeriod) {
-                rootObject.log("Step");
-                processStep();
-                timePassed = timePassed - stepPeriod;
+    public boolean update(float dt) {
+        if(super.update(dt)){
+            if(Gdx.input.isTouched()){
+                createCell((int)(InputHelper.mousePos.x / 16.0f), (int)(InputHelper.mousePos.y / 16.0f));
             }
+            timePassed += dt;
+            if (timePassed > stepPeriod) {
+                while (timePassed > stepPeriod) {
+                    rootObject.log("Step");
+                    processStep();
+                    timePassed = timePassed - stepPeriod;
+                }
+            }
+            return true;
         }
+        return false;
     }
 
 

@@ -2,6 +2,7 @@ package com.poison.zmeika.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +11,28 @@ import java.util.Map;
  * Created by Stas on 11/22/2015.
  */
 public class TextureManager {
-    private Map<String, Texture> textureCache = new HashMap<String, Texture>();
+    class TextureItem{
+        public int usageCount = 1;
+        public Texture texture;
 
-    public Texture loadTexture(String texture){
-        if(textureCache.containsKey(texture)){
-            return textureCache.get(texture);
+        public TextureItem(Texture texture){
+            this.texture = texture;
+            this.usageCount = 1;
         }
-        textureCache.put(texture, new Texture(Gdx.files.internal(texture)));
-        return textureCache.get(texture);
+    }
+    private Map<String, TextureItem> textureCache = new HashMap<>();
+
+    public Texture loadTexture(String texture) {
+        if (textureCache.containsKey(texture)) {
+            textureCache.get(texture).usageCount++;
+            return textureCache.get(texture).texture;
+        }
+        textureCache.put(texture, new TextureItem(new Texture(Gdx.files.internal(texture))));
+        return textureCache.get(texture).texture;
+    }
+
+    public Sprite simpleSprite(String texture){
+        return new Sprite(loadTexture(texture));
     }
 
     private static TextureManager instance;

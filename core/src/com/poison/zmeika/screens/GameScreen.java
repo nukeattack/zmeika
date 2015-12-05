@@ -18,8 +18,9 @@ public class GameScreen implements Screen {
     GameObject rootObject;
     OrthographicCamera camera;
     SpriteBatch mainBatch;
-    Sprite sprite;
+    Sprite cursor;
     Vector3 mouse = new Vector3(0,0,0);
+    private boolean rootCreated = false;
 
     public GameScreen(){
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -28,7 +29,7 @@ public class GameScreen implements Screen {
 //        camera.lookAt(-400, -300, 0);
         mainBatch = new SpriteBatch();
         rootObject = new GameRoot();
-        sprite = new Sprite(TextureManager.instance().loadTexture("cell2.png"));
+        cursor = new Sprite(TextureManager.instance().loadTexture("cell2.png"));
     }
 
     @Override
@@ -38,20 +39,25 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        camera.update();
-        mainBatch.setProjectionMatrix(camera.combined);
-        mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        Vector3 realPos = camera.unproject(mouse);
-        InputHelper.mousePos.set(realPos.x, realPos.y, 0);
-        mainBatch.begin();
-        rootObject.draw(delta, mainBatch);
-        sprite.setPosition(InputHelper.mousePos.x, InputHelper.mousePos.y);
-        sprite.draw(mainBatch);
-        mainBatch.end();
-        rootObject.update(delta);
-        TweenController.instance().getManager().update(delta);
+        if(rootCreated){
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            camera.update();
+            mainBatch.setProjectionMatrix(camera.combined);
+            mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            Vector3 realPos = camera.unproject(mouse);
+            InputHelper.mousePos.set(realPos.x, realPos.y, 0);
+            mainBatch.begin();
+            rootObject.draw(delta, mainBatch);
+            cursor.setPosition(InputHelper.mousePos.x, InputHelper.mousePos.y);
+            cursor.draw(mainBatch);
+            mainBatch.end();
+            rootObject.update(delta);
+            TweenController.instance().getManager().update(delta);
+        }else{
+            rootObject.construct();
+            rootCreated = true;
+        }
     }
 
     @Override

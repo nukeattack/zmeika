@@ -2,8 +2,8 @@ package com.poison.zmeika.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.StringBuilder;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,29 +11,58 @@ import java.util.List;
  * Created by Stas on 11/18/2015.
  */
 public class GameObject {
-    private List<GameObject> child;
+    protected List<GameObject> children;
+    protected boolean isDeleted = false;
+    protected boolean isConstructed = false;
 
     public GameObject(){
-        child = new LinkedList<GameObject>();
+        children = new LinkedList<>();
     }
 
     public void construct(){
-
-    }
-
-    public void destruct(){
-
-    }
-
-    public void draw(float delta, SpriteBatch spriteBatch){
-        for(int i = 0; i < child.size(); i++){
-            child.get(i).draw(delta, spriteBatch);
+        isConstructed = true;
+        Iterator<GameObject> iterator = children.iterator();
+        while (iterator.hasNext()){
+            GameObject o = iterator.next();
+            o.construct();
         }
     }
 
-    public void update(float delta){
-        for(int i = 0; i < child.size(); i++){
-            child.get(i).update(delta);
+    public void destruct(){
+        isConstructed = false;
+        Iterator<GameObject> iterator = children.iterator();
+        while (iterator.hasNext()){
+            GameObject o = iterator.next();
+            children.remove(o);
+            o.destruct();
+        }
+    }
+
+    public boolean draw(float delta, SpriteBatch spriteBatch){
+        if (!isDeleted && isConstructed) {
+            for(GameObject o : children){
+                o.draw(delta, spriteBatch);
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean update(float delta){
+        if(!isDeleted && isConstructed){
+            Iterator<GameObject> iterator = children.iterator();
+            while (iterator.hasNext()){
+                GameObject o = iterator.next();
+                if(o.isDeleted){
+                    children.remove(o);
+                    o.destruct();
+                }
+                 o.update(delta);
+            }
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -46,18 +75,26 @@ public class GameObject {
     }
 
     public void addChild(GameObject gameObject){
-        getChild().add(gameObject);
+        getChildren().add(gameObject);
     }
 
     public void removeChild(GameObject gameObject){
-        getChild().remove(gameObject);
+        getChildren().remove(gameObject);
     }
 
-    public List<GameObject> getChild() {
-        return child;
+    public List<GameObject> getChildren() {
+        return children;
     }
 
-    public void setChild(List<GameObject> child) {
-        this.child = child;
+    public void setChildren(List<GameObject> children) {
+        this.children = children;
+    }
+
+    public void delete(){
+        isDeleted = true;
+    }
+
+    public boolean isDeleted(){
+        return isDeleted;
     }
 }
