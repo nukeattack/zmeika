@@ -1,7 +1,5 @@
 package com.poison.zmeika.engine.pool;
 
-import java.util.concurrent.TimeUnit;
-
 public interface BlockingPool < T > extends Pool < T >
 {
     /**

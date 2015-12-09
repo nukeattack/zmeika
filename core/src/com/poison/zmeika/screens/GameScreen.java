@@ -20,7 +20,10 @@ public class GameScreen implements Screen {
 
     LevelRoot levelRoot;
     OrthographicCamera camera;
+    OrthographicCamera alternativeCamera;
     SpriteBatch mainBatch;
+    SpriteBatch alternativeBatch;
+
     Sprite cursor;
     Vector3 mouse = new Vector3(0,0,0);
     private boolean levelCreated = false;
@@ -30,13 +33,20 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.x = Gdx.graphics.getWidth()/2;
         camera.position.y = Gdx.graphics.getHeight()/2;
+
+        alternativeCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        alternativeCamera.position.x = Gdx.graphics.getWidth()/2;
+        alternativeCamera.position.y = Gdx.graphics.getHeight()/2;
+
         mainBatch = new SpriteBatch();
+        alternativeBatch = new SpriteBatch();
         levelRoot = getLevelRoot(1);
 
         cursor = new Sprite(new Texture(Gdx.files.local("cell2.png")));
 
 
         TextureManager.instance().preloadTextures(levelRoot.getContextName(), levelRoot.getTextures());
+        TweenController.instance();
     }
 
     @Override
@@ -46,10 +56,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        MessagingManager.instance().executeEvents();
-        TextureManager.instance().update(delta);
-        TweenController.instance().manager.update(delta);
         if(levelCreated){
+            TweenController.instance().manager.update(delta);
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             camera.update();
@@ -62,6 +70,11 @@ public class GameScreen implements Screen {
             cursor.setPosition(InputHelper.mousePos.x, InputHelper.mousePos.y);
             cursor.draw(mainBatch);
             mainBatch.end();
+            alternativeBatch.setProjectionMatrix(alternativeCamera.combined);
+            alternativeBatch.begin();
+            levelRoot.draw(delta, alternativeBatch);
+            alternativeBatch.end();
+            MessagingManager.instance().executeEvents();
             levelRoot.update(delta);
         }else{
             if(levelRoot.getProgress() == 1.0){
@@ -69,6 +82,7 @@ public class GameScreen implements Screen {
                 levelCreated = true;
                 Gdx.app.log("Loaded " + levelRoot.getContextName(), "Progress : 100%");
             }else{
+                TextureManager.instance().update(delta);
                 Gdx.app.log("Loading " + levelRoot.getContextName(), "Progress : " + levelRoot.getProgress()*100);
             }
         }

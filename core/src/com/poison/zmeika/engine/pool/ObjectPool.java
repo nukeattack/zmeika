@@ -38,11 +38,12 @@ public final class ObjectPool< T >
                     maxCapacity = objects.size();
                     System.out.println("Capacity grew up to " + maxCapacity);
                 }
-
-                if (objects.size() == 0) {
-                    t = objectFactory.createNew();
-                } else {
-                    t = objects.poll();
+                synchronized (objects){
+                    if (objects.size() == 0) {
+                        t = objectFactory.createNew();
+                    } else {
+                        t = objects.poll();
+                    }
                 }
             }
             return t;

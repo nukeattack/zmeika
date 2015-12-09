@@ -1,19 +1,19 @@
-package com.poison.zmeika.game.controller.utils;
+package com.poison.zmeika.game.utils;
 
 import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.pool.ObjectFactory;
 import com.poison.zmeika.engine.pool.ObjectPool;
-import com.poison.zmeika.game.model.life.CellModel;
 import com.poison.zmeika.game.model.fx.Explosive;
+import com.poison.zmeika.game.model.life.Cell;
 
 /**
  *
  */
-public class PoolController {
-    public static ObjectPool<CellModel> cellModels = new ObjectPool<CellModel>(new ObjectFactory<CellModel>() {
+public class PoolContainer {
+    public static ObjectPool<Cell> cellModels = new ObjectPool<Cell>(new ObjectFactory<Cell>() {
         @Override
-        public CellModel createNew() {
-            return new CellModel();
+        public Cell createNew() {
+            return new Cell();
         }
     });
     public static ObjectPool<Explosive> explosives = new ObjectPool<Explosive>(new ObjectFactory<Explosive>() {

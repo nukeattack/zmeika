@@ -1,63 +1,97 @@
 package com.poison.zmeika.game.model.life;
 
-import com.poison.zmeika.game.controller.utils.PoolController;
-
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Stas on 12/3/2015.
- */
 public class BoardModel {
     public int width;
     public int height;
-    public CellModel[] [] board;
-    public List<CellModel> cells;
+    public Cell[] [] board;
+    public List<Cell> cells;
+    public int [][] neighborsCount;
+    private int maxX;
+    private int maxY;
+    public int liveCellsCount = 0;
+    public int deadCellsCount = 0;
 
-    public BoardModel(int width, int height){
-        board = new CellModel[width][height];
-        cells = new LinkedList<CellModel>();
+
+    public BoardModel(int width, int height) {
+        neighborsCount = new int[width][height];
+        board = new Cell[width][height];
+        cells = new LinkedList<Cell>();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                neighborsCount[i][j] = 0;
+                board[i][j] = new Cell().setPosition(i,j).setAlive(false);
+                cells.add(board[i][j]);
+            }
+        }
         this.width = width;
         this.height = height;
+        deadCellsCount = width * height;
+        this.maxX = width - 1;
+        this.maxY = height - 1;
     }
 
-    public void addCell(CellModel cell){
-        board[cell.position.x][cell.position.y] = cell;
-        cells.add(cell);
-    }
-
-    public CellModel getCell(int x, int y){
+    public Cell getCell(int x, int y){
         return board[x][y];
     }
 
-    public void removeCell(int x, int y){
-        CellModel cell = board[x][y];
-        if(cell != null){
-            cells.remove(board[x][y]);
+    public Cell setAlive(int x, int y, boolean alive){
+        if(alive){
+            liveCellsCount ++;
+            deadCellsCount --;
+        }else{
+            deadCellsCount ++;
+            liveCellsCount --;
         }
-        PoolController.cellModels.release(cell);
-        board[x][y] = null;
+        x = getRealX(x);
+        y = getRealY(y);
+        Cell result = board[x][y];
+        result.isAlive = alive;
+        for(int i = -1; i < 2; i++){
+            for(int j = -1; j < 2; j++){
+                if(!(i == 0 && j == 0)){
+                    int realX = getRealX(x + i);
+                    int realY = getRealY(y + j);
+                    if(alive){
+//                        System.out.println(x + " " + y);
+                        neighborsCount[realX][realY]++;
+//                        System.out.println(realX + " " + realY);
+//                        System.out.println("*********");
+                    }else{
+//                        System.out.println(x + " " + y);
+                        neighborsCount[realX][realY]--;
+//                        System.out.println(realX + " " + realY);
+//                        System.out.println("*********");
+                    }
+                }
+            }
+        }
+        return result;
     }
 
-//    public List<CellModel> getNeighbours(int x, int y){
-//        int startX = x > 0 ? x - 1 : x;
-//        int startY = y > 0 ? y - 1 : y;
-//        int endX = x < width - 1 ? x + 1 : x;
-//        int endY = y < height -1 ? y + 1 : y;
-//        List<CellModel> result = new LinkedList<CellModel>();
-//        for(int i = startX; i <= endX; i++){
-//            for(int j = startY; i <= endY; j++){
-//                if(!(i == x && j == y)){
-//                    if(board[x][y] != null){
-//                        result.add(board[x][y]);
-//                    }
-//                }
-//            }
-//        }
-//        return result;
-//    }
+    private int getRealX(int x) {
+        if(x < 0){
+            return width + x;
+        }
+        if(x > maxX){
+            return x - width;
+        }
+        return x;
+    }
 
-    public List<CellModel> getCells() {
+    private int getRealY(int y) {
+        if(y < 0){
+            return height + y;
+        }
+        if(y > maxY){
+            return y - height;
+        }
+        return y;
+    }
+
+    public List<Cell> getCells() {
         return cells;
     }
 }

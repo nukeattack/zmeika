@@ -1,7 +1,5 @@
 package com.poison.zmeika.engine.geometry;
 
-import aurelienribon.tweenengine.TweenAccessor;
-
 /**
  * Created by Stas on 11/22/2015.
  */

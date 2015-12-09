@@ -14,7 +14,6 @@ public class GameObject {
     protected List<GameObject> children;
     protected boolean isDeleted = false;
     protected boolean isConstructed = false;
-    protected boolean isLoaded = false;
     private String contextName = null;
     private GameObject parent;
 
@@ -35,15 +34,6 @@ public class GameObject {
         children = new LinkedList<GameObject>();
     }
 
-
-    public boolean isLoaded(){
-        return isLoaded;
-    }
-
-    public void setLoaded(boolean isLoaded){
-        this.isLoaded = true;
-    }
-
     public void construct(){
         isConstructed = true;
         Iterator<GameObject> iterator = children.iterator();
@@ -58,15 +48,17 @@ public class GameObject {
         Iterator<GameObject> iterator = children.iterator();
         while (iterator.hasNext()){
             GameObject o = iterator.next();
-            children.remove(o);
+            iterator.remove();
             o.destruct();
         }
     }
 
     public boolean draw(float delta, SpriteBatch spriteBatch){
         if (!isDeleted && isConstructed) {
-            for(GameObject o : children){
-                o.draw(delta, spriteBatch);
+            synchronized (children){
+                for(GameObject o : children){
+                    o.draw(delta, spriteBatch);
+                }
             }
             return true;
         }else{
@@ -80,10 +72,10 @@ public class GameObject {
             while (iterator.hasNext()){
                 GameObject o = iterator.next();
                 if(o.isDeleted){
-                    children.remove(o);
-                    o.destruct();
+                    iterator.remove();
+                }else{
+                    o.update(delta);
                 }
-                 o.update(delta);
             }
             return true;
         }else{

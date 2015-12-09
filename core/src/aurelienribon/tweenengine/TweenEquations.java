@@ -1,16 +1,6 @@
 package aurelienribon.tweenengine;
 
-import aurelienribon.tweenengine.equations.Back;
-import aurelienribon.tweenengine.equations.Bounce;
-import aurelienribon.tweenengine.equations.Circ;
-import aurelienribon.tweenengine.equations.Cubic;
-import aurelienribon.tweenengine.equations.Elastic;
-import aurelienribon.tweenengine.equations.Expo;
-import aurelienribon.tweenengine.equations.Linear;
-import aurelienribon.tweenengine.equations.Quad;
-import aurelienribon.tweenengine.equations.Quart;
-import aurelienribon.tweenengine.equations.Quint;
-import aurelienribon.tweenengine.equations.Sine;
+import aurelienribon.tweenengine.equations.*;
 
 /**
  * Collection of built-in easing equations

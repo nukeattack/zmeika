@@ -1,21 +1,23 @@
 package com.poison.zmeika.game.controller.view.renderers;
 
+import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.TextureManager;
 import com.poison.zmeika.engine.TweenController;
-import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.geometry.Vec2fTweenAccessor;
+import com.poison.zmeika.engine.messaging.EventHandler;
 import com.poison.zmeika.engine.messaging.GameEvent;
 import com.poison.zmeika.engine.messaging.GameEventType;
 import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.game.controller.logic.BoardController;
-import com.poison.zmeika.game.controller.utils.PoolController;
+import com.poison.zmeika.game.utils.PoolContainer;
 import com.poison.zmeika.game.model.fx.Explosive;
-import net.engio.mbassy.listener.Handler;
+import com.poison.zmeika.game.model.life.Cell;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +28,7 @@ import java.util.List;
  */
 public class ExplosiveRenderer extends GameObject {
     public static String IMAGE_NAME = "cell.png";
-    public static final float AVG_DURATION = 2.0f;
+    public static final float AVG_DURATION = 2.2f;
     public static final float AVG_X_SCALE = 2.5f;
     public static final float AVG_Y_SCALE = 2.5f;
     Sprite cellSprite;
@@ -43,6 +45,7 @@ public class ExplosiveRenderer extends GameObject {
             for(Explosive explosive : explosives){
                 cellSprite.setCenter(cellSprite.getWidth() * 0.5f, cellSprite.getHeight() * 0.5f);
                 cellSprite.setPosition(explosive.position.x, explosive.position.y);
+//                explosive.opacity.x -= 0.8 * delta;
                 cellSprite.setAlpha(explosive.opacity.x);
                 cellSprite.setScale(explosive.size.x, explosive.size.y);
                 cellSprite.draw(spriteBatch);
@@ -55,44 +58,55 @@ public class ExplosiveRenderer extends GameObject {
 
     @Override
     public boolean update(float delta) {
-        Iterator<Explosive> iterator = explosives.iterator();
-        while(iterator.hasNext()){
-            Explosive explosive = iterator.next();
-            if(explosive.isFinished()){
-                iterator.remove();
-                removeExplosive(explosive);
+        if(super.update(delta)){
+            System.out.println(explosives.size());
+            Iterator<Explosive> iterator = explosives.iterator();
+            while (iterator.hasNext()){
+                Explosive explosive = iterator.next();
+                if(explosive.isFinished()){
+                    iterator.remove();
+                    PoolContainer.explosives.release(explosive);
+                }
             }
+            return true;
+        }else{
+            return false;
         }
-        return super.update(delta);
-    }
-
-    private void removeExplosive(Explosive e){
-        PoolController.explosives.release(e);
     }
 
     private void createExplosive(float x, float y){
-        Explosive explosive = PoolController.explosives.get().setPos(x, y);
+        final Explosive explosive = PoolContainer.explosives.get().setPos(x, y);
         float duration = AVG_DURATION  + AVG_DURATION*0.5f - (float)Math.random()*AVG_DURATION * 0.25f;
         float xscale = AVG_X_SCALE  + (float)Math.random()*AVG_X_SCALE * 0.25f - AVG_X_SCALE*0.5f;
         float yscale = AVG_Y_SCALE  + (float)Math.random()*AVG_Y_SCALE * 0.25f - AVG_Y_SCALE*0.5f;
-        TweenController.start(Tween.to(explosive.size, Vec2fTweenAccessor.POSITION_XY, duration).target(xscale, yscale).ease(TweenEquations.easeOutExpo));
-        TweenController.start(Tween.to(explosive.opacity, Vec2fTweenAccessor.POSITION_X, duration*0.8f).target(0.0f).ease(TweenEquations.easeOutExpo));
+        TweenController.start(Tween.to(explosive.size, Vec2fTweenAccessor.POSITION_XY, duration).target(xscale, yscale).ease(TweenEquations.easeOutExpo).setCallback(new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                if(type == TweenCallback.COMPLETE){
+                    explosive.setFinished(true);
+                }
+            }
+        }));
+        TweenController.start(Tween.to(explosive.opacity, Vec2fTweenAccessor.POSITION_XY, duration*0.8f).target(0.0f, 0.0f).ease(TweenEquations.easeOutExpo));
         explosives.add(explosive);
     }
 
-    @Handler
+    @EventHandler
     public void handle(GameEvent event){
         if(event.type == GameEventType.OBJECT_DELETED){
-            Vec2f model = (Vec2f) event.data[0];
-            createExplosive(model.x, model.y);
-            PoolController.vec2f.release(model);
+            handleObjectDeleted(event);
         }
+    }
+
+    private void handleObjectDeleted(GameEvent event){
+        Cell cell = (Cell) event.data[0];
+        createExplosive(cell.screenPosition.x, cell.screenPosition.y);
     }
 
     @Override
     public void construct() {
         cellSprite = new Sprite(TextureManager.instance().getTexture(getContextName(), IMAGE_NAME));
-        MessagingManager.instance().registerListener(this);
+        MessagingManager.instance().registerHandler(this);
         super.construct();
     }
 

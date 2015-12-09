@@ -10,6 +10,7 @@ public class Explosive implements ICleanable{
     public Vec2f position = new Vec2f(1.0f, 1.0f);
     public Vec2f size = new Vec2f(1.0f, 1.0f);
     public Vec2f opacity = new Vec2f(1.0f, 1.0f);
+    public boolean finished = false;
 
     public Explosive(){
         clean();
@@ -36,7 +37,11 @@ public class Explosive implements ICleanable{
     }
 
     public boolean isFinished() {
-        return opacity.x <= 0.0f;
+        return finished;
+    }
+
+    public void setFinished(boolean finished){
+        this.finished = true;
     }
 
     @Override
@@ -44,5 +49,6 @@ public class Explosive implements ICleanable{
         position.set(0.0f, 0.0f);
         size.set(1.0f, 1.0f);
         opacity.x = 1.0f;
+        finished = false;
     }
 }

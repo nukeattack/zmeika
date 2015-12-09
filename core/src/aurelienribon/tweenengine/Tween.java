@@ -1,6 +1,7 @@
 package aurelienribon.tweenengine;
 
 import aurelienribon.tweenengine.equations.Quad;
+
 import java.util.HashMap;
 import java.util.Map;
 
