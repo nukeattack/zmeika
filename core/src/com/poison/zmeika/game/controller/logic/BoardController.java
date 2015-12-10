@@ -71,7 +71,7 @@ public class BoardController extends GameObject {
         lifeIteration();
         markLifeToLiveDeadToDeath();
 
-        if(board.liveCellsCount < 10){
+        if(board.liveCellsCount < 100){
             for(int i = 0; i < 100; i++){
                 createRandomCell();
             }
@@ -132,11 +132,11 @@ public class BoardController extends GameObject {
 
     public void createCell(int x, int y) {
         Cell cell = board.setAlive(x, y, true);
-        //publishEvent(EventPool.instance().getEvent().withData(cell).withType(GameEventType.OBJECT_CREATED));
+        publishEvent(EventPool.instance().getEvent().withData(cell).withType(GameEventType.OBJECT_CREATED));
     }
 
     public void removeCell(int x, int y) {
         Cell cell = board.setAlive(x, y, false);
-        //publishEvent(EventPool.instance().getEvent().withData(cell).withType(GameEventType.OBJECT_DELETED));
+        publishEvent(EventPool.instance().getEvent().withData(cell).withType(GameEventType.OBJECT_DELETED));
     }
 }

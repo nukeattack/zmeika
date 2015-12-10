@@ -55,7 +55,6 @@ public class ViewController extends GameObject {
 
     @EventHandler
     public void handle(GameEvent event){
-        System.out.println(event.toString());
     }
 
     public void setBoardController(BoardController boardController) {

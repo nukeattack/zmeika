@@ -59,7 +59,6 @@ public class ExplosiveRenderer extends GameObject {
     @Override
     public boolean update(float delta) {
         if(super.update(delta)){
-            System.out.println(explosives.size());
             Iterator<Explosive> iterator = explosives.iterator();
             while (iterator.hasNext()){
                 Explosive explosive = iterator.next();
