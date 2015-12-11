@@ -55,10 +55,8 @@ public class GameObject {
 
     public boolean draw(float delta, SpriteBatch spriteBatch){
         if (!isDeleted && isConstructed) {
-            synchronized (children){
-                for(GameObject o : children){
-                    o.draw(delta, spriteBatch);
-                }
+            for(GameObject o : children){
+                o.draw(delta, spriteBatch);
             }
             return true;
         }else{

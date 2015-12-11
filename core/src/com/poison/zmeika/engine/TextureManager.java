@@ -20,13 +20,11 @@ public class TextureManager {
     }
 
     public AssetManager getAssetContext(String contextName){
-        synchronized (assetContexts){
-            if(assetContexts.containsKey(contextName)){
-                return assetContexts.get(contextName);
-            }else{
-                assetContexts.put(contextName, new AssetManager());
-                return assetContexts.get(contextName);
-            }
+        if(assetContexts.containsKey(contextName)){
+            return assetContexts.get(contextName);
+        }else{
+            assetContexts.put(contextName, new AssetManager());
+            return assetContexts.get(contextName);
         }
     }
 

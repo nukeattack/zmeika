@@ -28,7 +28,6 @@ public class GameScreen implements Screen {
     SpriteBatch mainBatch;
     SpriteBatch alternativeBatch;
 
-    Sprite cursor;
     Vector3 mouse = new Vector3(0,0,0);
     private boolean levelCreated = false;
 
@@ -40,9 +39,6 @@ public class GameScreen implements Screen {
         mainBatch = new SpriteBatch();
         alternativeBatch = new SpriteBatch();
         levelRoot = getLevelRoot(1);
-
-        cursor = new Sprite(new Texture(Gdx.files.local("cell2.png")));
-
 
         TextureManager.instance().preloadTextures(levelRoot.getContextName(), levelRoot.getTextures());
         TweenController.instance();
@@ -69,8 +65,6 @@ public class GameScreen implements Screen {
             mainBatch.setProjectionMatrix(camera.combined);
             mainBatch.begin();
             levelRoot.draw(delta, mainBatch);
-            cursor.setPosition(InputHelper.mousePos.x, InputHelper.mousePos.y);
-            cursor.draw(mainBatch);
             mainBatch.end();
 
             MessagingManager.instance().executeEvents();

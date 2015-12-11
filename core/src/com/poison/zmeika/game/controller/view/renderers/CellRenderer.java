@@ -18,7 +18,7 @@ public class CellRenderer extends GameObject {
     Vec2f innerScale = new Vec2f(16.0f / 800.0f, 16.0f / 600.0f);
     Vec2f outerScale = new Vec2f(1.0f, 1.0f);
     Vec2f anc = new Vec2f(400.0f, 300.0f);
-    float time = 1.0f;
+    float time = 2.0f;
     TweenEquation equation = TweenEquations.easeInExpo;
 
 
@@ -31,7 +31,6 @@ public class CellRenderer extends GameObject {
         if(super.draw(delta, spriteBatch)){
             draw(spriteBatch, innerScale.x, innerScale.y, anc.x, anc.y, anc.x, anc.y);
             draw(spriteBatch, outerScale.x, outerScale.y, anc.x, anc.y, anc.x, anc.y);
-            //draw(spriteBatch, 0.5f, 0.5f, 400.0f, 300.0f, 400, 300);
             return true;
         }else{
             return false;

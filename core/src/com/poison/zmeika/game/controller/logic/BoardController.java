@@ -13,7 +13,7 @@ import com.poison.zmeika.game.model.life.Cell;
 public class BoardController extends GameObject {
     private static final int WIDTH = 50;
     private static final int HEIGHT = 38;
-    private static final float STEP_PERIOD = 0.3f;
+    private static final float STEP_PERIOD = 0.5f;
     private static final int MIN_CELLS = 200;
 
     private BoardModel board;
