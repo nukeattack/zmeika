@@ -10,12 +10,6 @@ import com.poison.zmeika.game.model.life.Cell;
  *
  */
 public class PoolContainer {
-    public static ObjectPool<Cell> cellModels = new ObjectPool<Cell>(new ObjectFactory<Cell>() {
-        @Override
-        public Cell createNew() {
-            return new Cell();
-        }
-    });
     public static ObjectPool<Explosive> explosives = new ObjectPool<Explosive>(new ObjectFactory<Explosive>() {
         @Override
         public Explosive createNew() {
