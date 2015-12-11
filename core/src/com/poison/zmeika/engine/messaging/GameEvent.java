@@ -5,7 +5,7 @@ import com.poison.zmeika.game.model.ICleanable;
 /**
  * Created by Stas on 12/4/2015.
  */
-public class GameEvent implements ICleanable {
+public class GameEvent implements ICleanable, IEvent {
     public Object [] data;
     public GameEventType type;
     public boolean processed = false;
@@ -64,5 +64,10 @@ public class GameEvent implements ICleanable {
     public void clean() {
         data = null;
         type = null;
+    }
+
+    @Override
+    public GameEventType getType() {
+        return type;
     }
 }

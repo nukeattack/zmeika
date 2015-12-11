@@ -19,6 +19,7 @@ public class CellRenderer extends GameObject {
     Vec2f outerScale = new Vec2f(1.0f, 1.0f);
     Vec2f anc = new Vec2f(400.0f, 300.0f);
     float time = 1.0f;
+    TweenEquation equation = TweenEquations.easeInExpo;
 
 
     public CellRenderer(BoardController controller){
@@ -61,8 +62,8 @@ public class CellRenderer extends GameObject {
                     anc.y = 100 + (float)(Math.random() * 300) ;
                 }
             }
-        }).repeat(Tween.INFINITY, 0.0f).ease(TweenEquations.easeNone));
-        TweenController.start(Tween.to(outerScale, Vec2fTweenAccessor.POSITION_XY, time).target(16.0f, 16.0f).repeat(Tween.INFINITY, 0.0f).ease(TweenEquations.easeNone));
+        }).repeat(Tween.INFINITY, 0.0f).ease(equation));
+        TweenController.start(Tween.to(outerScale, Vec2fTweenAccessor.POSITION_XY, time).target(16.0f, 16.0f).repeat(Tween.INFINITY, 0.0f).ease(equation));
         super.construct();
     }
 

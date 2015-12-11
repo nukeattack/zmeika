@@ -10,14 +10,11 @@ import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.TextureManager;
 import com.poison.zmeika.engine.TweenController;
 import com.poison.zmeika.engine.geometry.Vec2fTweenAccessor;
-import com.poison.zmeika.engine.messaging.EventHandler;
-import com.poison.zmeika.engine.messaging.GameEvent;
-import com.poison.zmeika.engine.messaging.GameEventType;
-import com.poison.zmeika.engine.messaging.MessagingManager;
+import com.poison.zmeika.engine.messaging.*;
 import com.poison.zmeika.game.controller.logic.BoardController;
-import com.poison.zmeika.game.utils.PoolContainer;
 import com.poison.zmeika.game.model.fx.Explosive;
 import com.poison.zmeika.game.model.life.Cell;
+import com.poison.zmeika.game.utils.PoolContainer;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +23,7 @@ import java.util.List;
 /**
  *
  */
-public class ExplosiveRenderer extends GameObject {
+public class ExplosiveRenderer extends GameObject implements IEventListener{
     public static String IMAGE_NAME = "cell.png";
     public static final float AVG_DURATION = 2.2f;
     public static final float AVG_X_SCALE = 2.5f;
@@ -90,28 +87,29 @@ public class ExplosiveRenderer extends GameObject {
         explosives.add(explosive);
     }
 
-    @EventHandler
-    public void handle(GameEvent event){
-        if(event.type == GameEventType.OBJECT_DELETED){
-            handleObjectDeleted(event);
-        }
-    }
-
-    private void handleObjectDeleted(GameEvent event){
-        Cell cell = (Cell) event.data[0];
+    private void handleObjectDeleted(IEvent event){
+        GameEvent gameEvent = (GameEvent)event;
+        Cell cell = (Cell) gameEvent.data[0];
         createExplosive(cell.screenPosition.x, cell.screenPosition.y);
     }
 
     @Override
     public void construct() {
         cellSprite = new Sprite(TextureManager.instance().getTexture(getContextName(), IMAGE_NAME));
-        MessagingManager.instance().registerHandler(this);
+        MessagingManager.instance().registerListener(this);
         super.construct();
     }
 
     @Override
     public void destruct() {
-        MessagingManager.instance().unregisterListener(this);
+        MessagingManager.instance().removeListener(this);
         super.destruct();
+    }
+
+    @Override
+    public void handleEvent(IEvent event) {
+        if(event.getType() == GameEventType.OBJECT_DELETED){
+            handleObjectDeleted(event);
+        }
     }
 }

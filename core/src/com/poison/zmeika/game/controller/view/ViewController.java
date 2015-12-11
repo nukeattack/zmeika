@@ -2,10 +2,6 @@ package com.poison.zmeika.game.controller.view;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.poison.zmeika.engine.GameObject;
-import com.poison.zmeika.engine.messaging.EventHandler;
-import com.poison.zmeika.engine.messaging.GameEvent;
-import com.poison.zmeika.engine.messaging.GameEventListener;
-import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.engine.view.LayerManager;
 import com.poison.zmeika.game.controller.logic.BoardController;
 import com.poison.zmeika.game.controller.view.renderers.CellRenderer;
@@ -17,7 +13,6 @@ import com.poison.zmeika.game.controller.view.renderers.ExplosiveRenderer;
 public class ViewController extends GameObject {
     private BoardController boardController;
     private Sprite cellSprite;
-    private GameEventListener eventListener;
 
     private LayerManager layerManager = new LayerManager();
 
@@ -27,8 +22,6 @@ public class ViewController extends GameObject {
 
     @Override
     public void construct() {
-        MessagingManager.instance().registerHandler(this);
-
         layerManager.addLayer("squares");
         layerManager.addLayer("effects");
         addChild(layerManager);
@@ -44,17 +37,12 @@ public class ViewController extends GameObject {
 
     @Override
     public void destruct() {
-        MessagingManager.instance().unregisterListener(this);
         super.destruct();
     }
 
     @Override
     public boolean update(float delta) {
         return super.update(delta);
-    }
-
-    @EventHandler
-    public void handle(GameEvent event){
     }
 
     public void setBoardController(BoardController boardController) {
