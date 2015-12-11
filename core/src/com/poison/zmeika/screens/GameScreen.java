@@ -25,25 +25,17 @@ public class GameScreen implements Screen {
 
     LevelRoot levelRoot;
     OrthographicCamera camera;
-    OrthographicCamera alternativeCamera;
     SpriteBatch mainBatch;
     SpriteBatch alternativeBatch;
 
     Sprite cursor;
     Vector3 mouse = new Vector3(0,0,0);
     private boolean levelCreated = false;
-    private Vec2f posVec = new Vec2f(0.0f, 0.0f);
-    private Vec2f scaleVec = new Vec2f(1.0f, 1.0f);
-
 
     public GameScreen(){
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.x = Gdx.graphics.getWidth()/2;
         camera.position.y = Gdx.graphics.getHeight()/2;
-
-        alternativeCamera = new OrthographicCamera(Gdx.graphics.getWidth()*2, Gdx.graphics.getHeight()*2);
-        alternativeCamera.position.x = Gdx.graphics.getWidth()/2;
-        alternativeCamera.position.y = Gdx.graphics.getHeight()/2;
 
         mainBatch = new SpriteBatch();
         alternativeBatch = new SpriteBatch();
@@ -59,62 +51,28 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.app.log(this.getClass().getSimpleName(), "showing");
-        //TweenController.start(Tween.to(scaleVec, Vec2fTweenAccessor.POSITION_XY, 4.0f).target(1.0f / 16.0f, 1.0f/16.0f));
     }
 
     @Override
     public void render(float delta) {
         if(levelCreated){
-            float speed = 100.0f;
-            if(Gdx.input.isKeyPressed(Input.Keys.D)){
-                posVec.x += delta * speed;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.A)){
-                posVec.x -= delta * speed;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.W)){
-                posVec.y += delta * speed;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.S)){
-                posVec.y -= delta * speed;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                scaleVec.x -= delta ;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                scaleVec.x += delta ;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-                scaleVec.y += delta;
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                scaleVec.y -= delta;
-            }
-
             TweenController.instance().manager.update(delta);
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            alternativeCamera.setToOrtho(false, Gdx.graphics.getWidth()*scaleVec.x, Gdx.graphics.getHeight()*scaleVec.y);
-            System.out.println("Scale " + scaleVec);
-            System.out.println("Position " + posVec);
 
-            alternativeCamera.position.x = posVec.x * scaleVec.x;//Gdx.graphics.getWidth()*scaleVec.x;
-            alternativeCamera.position.y = posVec.y * scaleVec.x;//Gdx.graphics.getHeight()*scaleVec.y;
-            alternativeCamera.update();
             camera.update();
-            mainBatch.setProjectionMatrix(camera.combined);
+
             mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             Vector3 realPos = camera.unproject(mouse);
             InputHelper.mousePos.set(realPos.x, realPos.y, 0);
+
+            mainBatch.setProjectionMatrix(camera.combined);
             mainBatch.begin();
-            //levelRoot.draw(delta, mainBatch);
+            levelRoot.draw(delta, mainBatch);
             cursor.setPosition(InputHelper.mousePos.x, InputHelper.mousePos.y);
             cursor.draw(mainBatch);
             mainBatch.end();
-            alternativeBatch.setProjectionMatrix(alternativeCamera.combined);
-            alternativeBatch.begin();
-            levelRoot.draw(delta, alternativeBatch);
-            alternativeBatch.end();
+
             MessagingManager.instance().executeEvents();
             levelRoot.update(delta);
         }else{
