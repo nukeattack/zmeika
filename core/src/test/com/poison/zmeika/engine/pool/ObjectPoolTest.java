@@ -49,7 +49,7 @@ public class ObjectPoolTest {
     public void testObjectPool(){
         final int initialSize = 10;
 
-        ObjectPool<TestPoolable> pool = new ObjectPool(initialSize);
+        SimpleObjectPool<TestPoolable> pool = new SimpleObjectPool(initialSize);
         pool.setFactory(new ObjectFactory());
         TestPoolable testObject = pool.get();
         Assert.assertNotNull(testObject);

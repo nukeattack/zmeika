@@ -22,15 +22,12 @@ public class QueueElement<T> implements IQueueElement<T> {
 
     @Override
     public void setNext(IQueueElement<T> element) {
-        next = element;
+        this.next = element;
     }
 
     @Override
     public void setPrev(IQueueElement<T> element) {
-        prev = element;
-        if(element != null){
-            element.setNext(this);
-        }
+        this.prev = element;
     }
 
     @Override

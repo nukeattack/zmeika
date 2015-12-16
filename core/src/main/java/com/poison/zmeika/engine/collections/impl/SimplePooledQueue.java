@@ -2,21 +2,18 @@ package com.poison.zmeika.engine.collections.impl;
 
 import com.poison.zmeika.engine.collections.IQueue;
 import com.poison.zmeika.engine.collections.IQueueElement;
-import com.poison.zmeika.engine.pool.ObjectPool;
+import com.poison.zmeika.engine.pool.SimpleObjectPool;
 
 /**
  *
  */
 public class SimplePooledQueue <T> implements IQueue<T> {
 
-    private ObjectPool<IQueueElement<T>> elementPool;
+    private SimpleObjectPool<IQueueElement<T>> elementPool;
     private IQueueElement<T> last;
 
     @Override
     public T get() {
-        if(last == null){
-            return null;
-        }
         IQueueElement<T> queueItem = last;
         last = queueItem.getPrev();
         if(last != null){
@@ -30,14 +27,16 @@ public class SimplePooledQueue <T> implements IQueue<T> {
     @Override
     public void put(T element) {
         IQueueElement<T> queueItem = elementPool.get();
-        IQueueElement<T> prev = last != null ? last : null;
         queueItem.setData(element);
-        queueItem.setPrev(prev);
+        queueItem.setPrev(last);
         queueItem.setNext(null);
+        if(last != null){
+        	last.setNext(queueItem);
+        }
         last = queueItem;
     }
 
-    public void setElementPool(ObjectPool<IQueueElement<T>> elementPool) {
+    public void setElementPool(SimpleObjectPool<IQueueElement<T>> elementPool) {
         this.elementPool = elementPool;
     }
 }

@@ -5,14 +5,14 @@ import java.util.Arrays;
 /**
  *
  */
-public class ObjectPool <T extends IPoolable> implements IPool<T> {
+public class SimpleObjectPool <T extends IPoolable> implements IPool<T> {
     private Object [] elements;
     private long balance = 0;
     private long slotsCount = 0;
 
     private IObjectFactory<T> factory;
 
-    public ObjectPool(int initialSize){
+    public SimpleObjectPool(int initialSize){
         elements = new Object[initialSize];
         slotsCount = initialSize;
     }
@@ -29,7 +29,8 @@ public class ObjectPool <T extends IPoolable> implements IPool<T> {
         insertElement(element);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public T get() {
         T result = null;
         balance--;

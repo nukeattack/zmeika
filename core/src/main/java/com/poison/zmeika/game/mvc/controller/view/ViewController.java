@@ -1,6 +1,5 @@
 package com.poison.zmeika.game.mvc.controller.view;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.poison.zmeika.engine.GameObject;
 import com.poison.zmeika.engine.view.LayerManager;
 import com.poison.zmeika.game.mvc.controller.logic.BoardController;
@@ -11,7 +10,6 @@ import com.poison.zmeika.game.mvc.controller.view.renderers.CellRenderer;
  */
 public class ViewController extends GameObject {
     private BoardController boardController;
-    private Sprite cellSprite;
 
     private LayerManager layerManager = new LayerManager();
 

@@ -1,7 +1,7 @@
 package com.poison.zmeika.engine.messaging;
 
 import com.poison.zmeika.engine.pool.IObjectFactory;
-import com.poison.zmeika.engine.pool.ObjectPool;
+import com.poison.zmeika.engine.pool.SimpleObjectPool;
 
 /**
  *
@@ -22,10 +22,10 @@ public class EventPool {
         gameEventPool.release(event);
     }
 
-    private ObjectPool<GameEvent> gameEventPool = buildObjectPool();
+    private SimpleObjectPool<GameEvent> gameEventPool = buildObjectPool();
 
-    private ObjectPool<GameEvent> buildObjectPool(){
-        ObjectPool<GameEvent> result = new ObjectPool<GameEvent>(1000);
+    private SimpleObjectPool<GameEvent> buildObjectPool(){
+        SimpleObjectPool<GameEvent> result = new SimpleObjectPool<GameEvent>(1000);
         result.setFactory(new IObjectFactory<GameEvent>() {
             @Override
             public GameEvent createNew() {
