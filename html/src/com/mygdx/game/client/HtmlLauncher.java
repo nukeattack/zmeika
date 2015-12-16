@@ -3,7 +3,7 @@ package com.mygdx.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.poison.zmeika.ZmeikaGame;
+import poison.zmeika.ZmeikaGame;
 
 public class HtmlLauncher extends GwtApplication {
 
