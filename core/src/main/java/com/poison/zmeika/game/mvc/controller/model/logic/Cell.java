@@ -2,9 +2,9 @@ package com.poison.zmeika.game.mvc.controller.model.logic;
 
 import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.geometry.Vec2i;
-import com.poison.zmeika.game.mvc.controller.model.ICleanable;
+import com.poison.zmeika.engine.pool.IPoolable;
 
-public class Cell implements ICleanable{
+public class Cell implements IPoolable{
     public Vec2i position;
     public Vec2f screenPosition;
     public boolean isAlive = false;
@@ -25,7 +25,13 @@ public class Cell implements ICleanable{
     }
 
     @Override
-    public void clean() {
+    public void cleanup() {
+        position.set(0, 0);
+        screenPosition.set(0.0f, 0.0f);
+    }
+    
+    @Override
+    public void setup() {
         position.set(0, 0);
         screenPosition.set(0.0f, 0.0f);
     }
