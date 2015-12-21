@@ -13,8 +13,14 @@ public class SimpleObjectPool <T extends IPoolable> implements IPool<T> {
     private IObjectFactory<T> factory;
 
     public SimpleObjectPool(int initialSize){
-        elements = new Object[initialSize];
-        slotsCount = initialSize;
+        this.elements = new Object[initialSize];
+        this.slotsCount = initialSize;
+    }
+    
+    public SimpleObjectPool(int initialSize, IObjectFactory<T> factory){
+        this.elements = new Object[initialSize];
+        this.slotsCount = initialSize;
+        this.factory = factory;
     }
 
     private void insertElement(T element){

@@ -4,9 +4,6 @@ package com.poison.zmeika.engine.pool;
  * Represents the mechanism to create
  * new objects to be used in an object pool.
  *
- * @author Swaranga
- *
- * @param < T > the type of object to create.
  */
 public interface IObjectFactory< T >
 {
