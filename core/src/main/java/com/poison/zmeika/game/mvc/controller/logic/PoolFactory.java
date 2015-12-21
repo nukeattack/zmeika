@@ -4,7 +4,7 @@ import com.poison.zmeika.engine.pool.IObjectFactory;
 import com.poison.zmeika.engine.pool.IPool;
 import com.poison.zmeika.engine.pool.IPoolable;
 import com.poison.zmeika.engine.pool.SimpleObjectPool;
-import com.poison.zmeika.game.mvc.controller.model.view.Explosive;
+import com.poison.zmeika.game.mvc.model.view.Explosive;
 
 public class PoolFactory {
 	private static PoolFactory instance;

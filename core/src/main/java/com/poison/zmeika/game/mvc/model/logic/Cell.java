@@ -1,4 +1,4 @@
-package com.poison.zmeika.game.mvc.controller.model.logic;
+package com.poison.zmeika.game.mvc.model.logic;
 
 import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.geometry.Vec2i;

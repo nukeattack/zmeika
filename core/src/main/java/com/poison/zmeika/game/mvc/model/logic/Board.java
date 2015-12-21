@@ -1,4 +1,4 @@
-package com.poison.zmeika.game.mvc.controller.model.logic;
+package com.poison.zmeika.game.mvc.model.logic;
 
 import java.util.LinkedList;
 import java.util.List;

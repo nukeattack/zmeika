@@ -16,8 +16,8 @@ import com.poison.zmeika.engine.messaging.MessagingManager;
 import com.poison.zmeika.engine.pool.IPool;
 import com.poison.zmeika.game.mvc.controller.logic.BoardController;
 import com.poison.zmeika.game.mvc.controller.logic.PoolFactory;
-import com.poison.zmeika.game.mvc.controller.model.logic.Cell;
-import com.poison.zmeika.game.mvc.controller.model.view.Explosive;
+import com.poison.zmeika.game.mvc.model.logic.Cell;
+import com.poison.zmeika.game.mvc.model.view.Explosive;
 
 /**
  *

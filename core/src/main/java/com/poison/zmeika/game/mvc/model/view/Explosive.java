@@ -1,4 +1,4 @@
-package com.poison.zmeika.game.mvc.controller.model.view;
+package com.poison.zmeika.game.mvc.model.view;
 
 import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.pool.IPoolable;

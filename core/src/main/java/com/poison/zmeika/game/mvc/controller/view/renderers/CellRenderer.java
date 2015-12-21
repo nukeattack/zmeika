@@ -1,6 +1,5 @@
 package com.poison.zmeika.game.mvc.controller.view.renderers;
 
-import tweenengine.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.poison.zmeika.engine.GameObject;
@@ -9,7 +8,13 @@ import com.poison.zmeika.engine.TweenController;
 import com.poison.zmeika.engine.geometry.Vec2f;
 import com.poison.zmeika.engine.geometry.Vec2fTweenAccessor;
 import com.poison.zmeika.game.mvc.controller.logic.BoardController;
-import com.poison.zmeika.game.mvc.controller.model.logic.Cell;
+import com.poison.zmeika.game.mvc.model.logic.Cell;
+
+import tweenengine.BaseTween;
+import tweenengine.Tween;
+import tweenengine.TweenCallback;
+import tweenengine.TweenEquation;
+import tweenengine.TweenEquations;
 
 public class CellRenderer extends GameObject {
     public static String IMAGE_NAME = "cell2.png";

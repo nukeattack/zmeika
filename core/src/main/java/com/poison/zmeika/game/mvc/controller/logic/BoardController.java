@@ -7,8 +7,8 @@ import com.poison.zmeika.engine.messaging.EventPool;
 import com.poison.zmeika.engine.messaging.GameEvent;
 import com.poison.zmeika.engine.messaging.GameEventType;
 import com.poison.zmeika.engine.messaging.MessagingManager;
-import com.poison.zmeika.game.mvc.controller.model.logic.Board;
-import com.poison.zmeika.game.mvc.controller.model.logic.Cell;
+import com.poison.zmeika.game.mvc.model.logic.Board;
+import com.poison.zmeika.game.mvc.model.logic.Cell;
 
 public class BoardController extends GameObject {
     private static final int WIDTH = 50;
