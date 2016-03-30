@@ -3,8 +3,6 @@ package com.poison.zmeika.engine.pool;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 import java.util.*;
 
 /**
